@@ -1,34 +1,31 @@
 package com.amadev.rando.adapter
 
 import android.content.Context
-import android.renderscript.ScriptGroup
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
-import androidx.navigation.NavController
 import androidx.recyclerview.widget.RecyclerView
-import com.amadev.rando.databinding.CustomMoviesRecyclerviewPatternBinding
+import com.amadev.rando.databinding.CustomUpcomingMoviesRecyclerviewPatternBinding
 import com.amadev.rando.model.MovieDetailsResults
 import com.amadev.rando.ui.dialogs.movieDetails.MovieDetailsDialog
 import com.amadev.rando.util.Util.getProgressDrawable
 import com.amadev.rando.util.Util.loadImageWithGlide
 
-class MoviesRecyclerViewAdapter(
+class UpcomingMoviesRecyclerViewAdapter(
     val view: View,
     var context: Context,
     var list: ArrayList<MovieDetailsResults>
-) : RecyclerView.Adapter<MoviesRecyclerViewAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<UpcomingMoviesRecyclerViewAdapter.ViewHolder>() {
 
-    lateinit var navController: NavController
     val activity = context as FragmentActivity
     private val fragmentManager = activity.supportFragmentManager
 
-    class ViewHolder(val binding: CustomMoviesRecyclerviewPatternBinding) :
+    class ViewHolder(val binding: CustomUpcomingMoviesRecyclerviewPatternBinding) :
         RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding = CustomMoviesRecyclerviewPatternBinding
+        val binding = CustomUpcomingMoviesRecyclerviewPatternBinding
             .inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
@@ -52,6 +49,7 @@ class MoviesRecyclerViewAdapter(
 
         }
     }
+
     override fun getItemCount(): Int {
         return list.size
     }

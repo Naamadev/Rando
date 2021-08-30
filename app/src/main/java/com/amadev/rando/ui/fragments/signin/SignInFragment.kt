@@ -77,10 +77,10 @@ class SignInFragment : Fragment() {
                 else binding.progressbar.visibility = View.GONE
             }
             loginSuccessfulLiveData.observe(viewLifecycleOwner) {
-                if (it == true) findNavController().navigate(R.id.action_signInFragment_to_choiceFragment)
+                if (it == true) findNavController().navigate(R.id.action_signInFragment_to_mainFragment)
             }
             loginAutomaticallyIfPossibleLiveData.observe(viewLifecycleOwner) {
-                if (it == true) findNavController().navigate(R.id.action_signInFragment_to_choiceFragment)
+                if (it == true) findNavController().navigate(R.id.action_signInFragment_to_mainFragment)
             }
         }
     }

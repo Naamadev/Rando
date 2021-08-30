@@ -31,12 +31,19 @@ class MainFragmentViewModel(
         MutableLiveData<ArrayList<MovieDetailsResults>>()
     val popularMoviesResultsLiveData = popularMoviesResultsMutableLiveData
 
+    private val nowPlayingMoviesMutableLiveData =
+        MutableLiveData<ArrayList<MovieDetailsResults>>()
+    val nowPlayingMoviesLiveData = nowPlayingMoviesMutableLiveData
+
     private val searchedMoviesMutableLiveData =
         MutableLiveData<ArrayList<MovieDetailsResults>>()
     val searchedMoviesLiveData = searchedMoviesMutableLiveData
 
     private val popUpMessageMutableLiveData = MutableLiveData<String>()
     private val currentPage = MutableLiveData<Int>()
+
+
+
 
     fun getSearchedMovies(query: String) {
         val queryEncoded = encodeUrlString(query)
@@ -58,6 +65,18 @@ class MainFragmentViewModel(
 
     private fun encodeUrlString(string: String): String {
         return URLEncoder.encode(string, "utf-8")
+    }
+
+    fun getNowPlayingMovies() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val response = ApiService(apiClient).getNowPlayingMovies(1)
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    val results = it.results.reversed() as ArrayList<MovieDetailsResults>
+                    nowPlayingMoviesMutableLiveData.postValue(results)
+                }
+            }
+        }
     }
 
     fun getUpcomingMovies() {

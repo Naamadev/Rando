@@ -5,8 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.amadev.rando.R
-import com.amadev.rando.databinding.FragmentSecondScreenOnboardingBinding
 import com.amadev.rando.databinding.FragmentViewPagerBinding
 
 

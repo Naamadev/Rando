@@ -51,4 +51,9 @@
     <string name="Home">Home</string>
     <string name="playTrailer">Play trailer</string>
     <string name="results">Results</string>
+    <string name="latest">Latest</string>
+    <string name="movieName">movie name</string>
+    <string name="nowPlaying">Now playing</string>
+    <string name="search">search</string>
+    <string name="searchMovies">search movies</string>
 </resources>

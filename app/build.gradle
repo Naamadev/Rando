@@ -90,4 +90,7 @@ dependencies {
     implementation "io.insert-koin:koin-android:$koin_version"
     implementation "io.insert-koin:koin-android-viewmodel:$koin_version"
 
+    implementation 'com.github.sparrow007:carouselrecyclerview:1.1.0'
+
+
 }

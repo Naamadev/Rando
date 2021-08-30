@@ -1,10 +1,6 @@
 package com.amadev.rando.data
 
-import com.amadev.rando.model.Cast
-import com.amadev.rando.model.Genre
-import com.amadev.rando.model.MovieDetailsModel
-import com.amadev.rando.model.VideoDetailsModel
-import okio.ByteString
+import com.amadev.rando.model.*
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -17,6 +13,12 @@ interface ApiInterface {
     fun searchForMovies(
         @Query("api_key") key: String,
         @Query("query") query: String
+    ): Call<MovieDetailsModel>
+
+    @GET("movie/now_playing")
+    fun getNowPlayingMovies(
+        @Query("api_key") key: String,
+        @Query("page") page : Int
     ): Call<MovieDetailsModel>
 
     @GET("movie/upcoming")
