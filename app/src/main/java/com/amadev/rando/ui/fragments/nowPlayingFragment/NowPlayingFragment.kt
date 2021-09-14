@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amadev.rando.R
@@ -13,6 +12,8 @@ import com.amadev.rando.adapter.EndlessRecyclerOnScrollListener
 import com.amadev.rando.adapter.MoviesRecyclerViewAdapter
 import com.amadev.rando.databinding.FragmentNowPlayingBinding
 import com.amadev.rando.model.MovieDetailsResults
+import com.amadev.rando.util.Util.isNetworkAvailable
+import com.amadev.rando.util.Util.showToast
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class NowPlayingFragment : Fragment() {
@@ -39,9 +40,13 @@ class NowPlayingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getTopRatedMovies()
-        setUpRecyclerviewAdapter()
-        setUpObservers()
+        if (isNetworkAvailable(requireContext())) {
+            getNowPlayingMovies()
+            setUpRecyclerviewAdapter()
+            setUpObservers()
+        } else {
+            showToast(requireContext(), getString(R.string.noInternetConnection))
+        }
     }
 
     private fun setUpRecyclerviewAdapter() {
@@ -73,12 +78,12 @@ class NowPlayingFragment : Fragment() {
         recyclerView.addOnScrollListener(object :
             EndlessRecyclerOnScrollListener(gridLayoutManager) {
             override fun onLoadMore(current_page: Int) {
-                getTopRatedMovies()
+                getNowPlayingMovies()
             }
         })
     }
 
-    private fun getTopRatedMovies() {
+    private fun getNowPlayingMovies() {
         currentPage++
         nowPlayingViewModel.getPopularMovies(currentPage)
     }

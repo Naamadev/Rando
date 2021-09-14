@@ -4,6 +4,7 @@
     package="com.amadev.rando">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <queries>
         <intent>
             <action android:name="com.google.android.youtube.api.service.START" />

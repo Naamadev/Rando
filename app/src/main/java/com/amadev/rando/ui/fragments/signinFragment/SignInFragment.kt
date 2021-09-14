@@ -10,6 +10,9 @@ import androidx.navigation.fragment.findNavController
 import com.amadev.rando.R
 import com.amadev.rando.databinding.FragmentSignInBinding
 import com.amadev.rando.ui.dialogs.forgotPassword.ForgotPasswordDialog
+import com.amadev.rando.util.Util
+import com.amadev.rando.util.Util.isNetworkAvailable
+import com.amadev.rando.util.Util.showToast
 import com.google.android.material.snackbar.Snackbar
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -30,10 +33,14 @@ class SignInFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setUpViewModel()
-        setUpObservers()
-        setUpOnBackPressedCallback()
-        setUpOnClickListeners()
+        if (isNetworkAvailable(requireContext())) {
+            setUpViewModel()
+            setUpObservers()
+            setUpOnBackPressedCallback()
+            setUpOnClickListeners()
+        } else {
+            showToast(requireContext(), getString(R.string.noInternetConnection))
+        }
 
     }
 

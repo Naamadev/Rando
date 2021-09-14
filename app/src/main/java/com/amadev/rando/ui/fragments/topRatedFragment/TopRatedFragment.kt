@@ -12,6 +12,9 @@ import com.amadev.rando.adapter.EndlessRecyclerOnScrollListener
 import com.amadev.rando.adapter.MoviesRecyclerViewAdapter
 import com.amadev.rando.databinding.FragmentTopRatedBinding
 import com.amadev.rando.model.MovieDetailsResults
+import com.amadev.rando.util.Util
+import com.amadev.rando.util.Util.isNetworkAvailable
+import com.amadev.rando.util.Util.showToast
 import org.koin.android.viewmodel.ext.android.viewModel
 
 
@@ -38,10 +41,13 @@ class TopRatedFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-        getTopRatedMovies()
-        setUpRecyclerviewAdapter()
-        setUpObservers()
+        if (isNetworkAvailable(requireContext())) {
+            getTopRatedMovies()
+            setUpRecyclerviewAdapter()
+            setUpObservers()
+        } else {
+            showToast(requireContext(), getString(R.string.noInternetConnection))
+        }
     }
 
     private fun setUpRecyclerviewAdapter() {

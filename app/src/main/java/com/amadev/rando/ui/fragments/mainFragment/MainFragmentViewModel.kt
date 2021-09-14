@@ -1,8 +1,6 @@
 package com.amadev.rando.ui.fragments.mainFragment
 
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -140,5 +138,4 @@ class MainFragmentViewModel(
     fun isUserLoggedIn() {
         _isUserLoggedInMutableLiveData.value = auth.currentUser != null
     }
-
 }

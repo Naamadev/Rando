@@ -2,7 +2,6 @@ package com.amadev.rando.ui.fragments.movieDetailsFragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +15,7 @@ import com.amadev.rando.databinding.MovieDetailsFragmentBinding
 import com.amadev.rando.model.CastModelResults
 import com.amadev.rando.model.MovieDetailsResults
 import com.amadev.rando.util.Genres
+import com.amadev.rando.util.Util
 import com.amadev.rando.util.Util.getProgressDrawable
 import com.amadev.rando.util.Util.loadImageWithGlide
 import com.amadev.rando.util.Util.showSnackBar
@@ -43,10 +43,14 @@ class MovieDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        checkIsUserLoggedIn()
-        setUpObservers()
-        setUpViewModel()
-        setUpOnClickListeners()
+        if (Util.isNetworkAvailable(requireContext())) {
+            checkIsUserLoggedIn()
+            setUpObservers()
+            setUpViewModel()
+            setUpOnClickListeners()
+        } else {
+            showToast(requireContext(), getString(R.string.noInternetConnection))
+        }
 
     }
 

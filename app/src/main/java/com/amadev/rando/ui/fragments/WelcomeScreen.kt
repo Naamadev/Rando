@@ -38,5 +38,4 @@ class WelcomeScreen : Fragment() {
         return sharedPreferences.getBoolean("Finished", false)
     }
 
-
 }

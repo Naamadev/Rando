@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.amadev.rando.R
 import com.amadev.rando.databinding.FragmentSignUpBinding
+import com.amadev.rando.util.Util
+import com.amadev.rando.util.Util.isNetworkAvailable
 import com.amadev.rando.util.Util.showToast
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -28,11 +30,14 @@ class SignUpFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setUpProgressBarVisibility()
-        setUpObservers()
-        setUpOnClickListeners()
-        setUponBackPressedCallback()
-
+        if (isNetworkAvailable(requireContext())) {
+            setUpProgressBarVisibility()
+            setUpObservers()
+            setUpOnClickListeners()
+            setUponBackPressedCallback()
+        } else {
+            showToast(requireContext(), getString(R.string.noInternetConnection))
+        }
     }
 
     private fun setUpOnClickListeners() {

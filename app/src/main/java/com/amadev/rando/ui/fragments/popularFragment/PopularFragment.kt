@@ -13,6 +13,9 @@ import com.amadev.rando.adapter.EndlessRecyclerOnScrollListener
 import com.amadev.rando.adapter.MoviesRecyclerViewAdapter
 import com.amadev.rando.databinding.FragmentPopularBinding
 import com.amadev.rando.model.MovieDetailsResults
+import com.amadev.rando.util.Util
+import com.amadev.rando.util.Util.isNetworkAvailable
+import com.amadev.rando.util.Util.showToast
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class PopularFragment : Fragment() {
@@ -40,9 +43,14 @@ class PopularFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getTopRatedMovies()
-        setUpRecyclerviewAdapter()
-        setUpObservers()
+        if (isNetworkAvailable(requireContext())) {
+            getPopularMovies()
+            setUpRecyclerviewAdapter()
+            setUpObservers()
+        } else {
+            showToast(requireContext(), getString(R.string.noInternetConnection))
+        }
+
     }
 
     private fun setUpRecyclerviewAdapter() {
@@ -54,10 +62,6 @@ class PopularFragment : Fragment() {
             popularRecyclerView.adapter = adapter
 
         }
-    }
-
-    private fun navigateToMainFragment() {
-        findNavController().navigate(R.id.action_popularFragment_to_mainFragment)
     }
 
     private fun setUpObservers() {
@@ -78,12 +82,12 @@ class PopularFragment : Fragment() {
         recyclerView.addOnScrollListener(object :
             EndlessRecyclerOnScrollListener(gridLayoutManager) {
             override fun onLoadMore(current_page: Int) {
-                getTopRatedMovies()
+                getPopularMovies()
             }
         })
     }
 
-    private fun getTopRatedMovies() {
+    private fun getPopularMovies() {
         currentPage++
         popularFragmentViewModel.getPopularMovies(currentPage)
     }

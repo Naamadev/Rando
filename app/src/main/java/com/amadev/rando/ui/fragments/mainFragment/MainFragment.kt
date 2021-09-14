@@ -5,7 +5,6 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +20,7 @@ import com.amadev.rando.adapter.UpcomingMoviesRecyclerViewAdapter
 import com.amadev.rando.databinding.FragmentMainBinding
 import com.amadev.rando.model.MovieDetailsResults
 import com.amadev.rando.ui.dialogs.logout.LogoutDialog
+import com.amadev.rando.util.Util.isNetworkAvailable
 import com.amadev.rando.util.Util.showToast
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -30,6 +30,10 @@ class MainFragment : Fragment() {
     private val mainFragmentViewModel: MainFragmentViewModel by viewModel()
     private val action = R.id.action_mainFragment_to_movieDetailsFragment
     private var isUserLoggedIn: Boolean = false
+
+    companion object {
+        const val DELAY_TIME = 1500L
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,13 +46,16 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        checkIsUserLoggedIn()
-        getMovies()
-        setUpObservers()
-        setUpOnClickListeners()
-        setUpSearchMoviesEditText()
-        setUpOnBackPressedCallback()
-        Log.e("test", "gitignoreTest")
+        if (isNetworkAvailable(requireContext())) {
+            checkIsUserLoggedIn()
+            getMovies()
+            setUpObservers()
+            setUpOnClickListeners()
+            setUpSearchMoviesEditText()
+            setUpOnBackPressedCallback()
+        } else {
+            showToast(requireContext(), getString(R.string.noInternetConnection))
+        }
 
     }
 
@@ -81,7 +88,7 @@ class MainFragment : Fragment() {
                     if (s.isEmpty().not()) {
                         Handler(Looper.myLooper()!!).postDelayed({
                             searchMovies(s.toString())
-                        }, 1500)
+                        }, DELAY_TIME)
                     }
                 }
             }

@@ -10,7 +10,9 @@ import com.amadev.rando.R
 import com.amadev.rando.adapter.MoviesRecyclerViewAdapter
 import com.amadev.rando.databinding.FragmentFavoritesBinding
 import com.amadev.rando.model.MovieDetailsResults
+import com.amadev.rando.util.Util.isNetworkAvailable
 import com.amadev.rando.util.Util.showSnackBar
+import com.amadev.rando.util.Util.showToast
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class FavoritesFragment : Fragment() {
@@ -34,9 +36,13 @@ class FavoritesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getFavoriteMovies()
-        setUpRecyclerviewAdapter()
-        setUpObservers()
+        if (isNetworkAvailable(requireContext())) {
+            getFavoriteMovies()
+            setUpRecyclerviewAdapter()
+            setUpObservers()
+        } else {
+            showToast(requireContext(), getString(R.string.noInternetConnection))
+        }
 
     }
 
