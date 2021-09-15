@@ -51,6 +51,7 @@ class MainFragmentViewModel(
 
     private val popUpMessageMutableLiveData = MutableLiveData<String>()
 
+
     fun getSearchedMovies(query: String) {
         val queryEncoded = encodeUrlString(query)
 
@@ -72,9 +73,9 @@ class MainFragmentViewModel(
         return URLEncoder.encode(string, "utf-8")
     }
 
-    fun getNowPlayingMovies() {
+    fun getNowPlayingMovies(page : Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val response = ApiService(apiClient).getNowPlayingMovies(1)
+            val response = ApiService(apiClient).getNowPlayingMovies(page)
             if (response.isSuccessful) {
                 response.body()?.let {
                     val results = it.results.reversed() as ArrayList<MovieDetailsResults>
@@ -84,9 +85,9 @@ class MainFragmentViewModel(
         }
     }
 
-    fun getUpcomingMovies() {
+    fun getUpcomingMovies(page: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val response = ApiService(apiClient).getUpcomingMovie(1)
+            val response = ApiService(apiClient).getUpcomingMovie(page)
             if (response.isSuccessful) {
                 response.body()?.let {
                     val results = it.results as ArrayList<MovieDetailsResults>
@@ -96,9 +97,9 @@ class MainFragmentViewModel(
         }
     }
 
-    fun getTopRatedMovies() {
+    fun getTopRatedMovies(page: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val response = ApiService(apiClient).getTopRatedMovie(1)
+            val response = ApiService(apiClient).getTopRatedMovie(page)
             if (response.isSuccessful) {
                 val responseBody = response.body()
                 responseBody?.let {
@@ -112,9 +113,9 @@ class MainFragmentViewModel(
         }
     }
 
-    fun getPopularMovies() {
+    fun getPopularMovies(page: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val response = ApiService(apiClient).getPopularMovie(1)
+            val response = ApiService(apiClient).getPopularMovie(page)
             if (response.isSuccessful) {
                 val responseBody = response.body()
 

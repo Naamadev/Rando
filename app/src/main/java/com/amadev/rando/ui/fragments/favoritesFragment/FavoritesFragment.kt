@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.amadev.rando.R
-import com.amadev.rando.adapter.MoviesRecyclerViewAdapter
+import com.amadev.rando.adapter.MoviesGridRecyclerViewAdapter
 import com.amadev.rando.databinding.FragmentFavoritesBinding
 import com.amadev.rando.model.MovieDetailsResults
 import com.amadev.rando.util.Util.isNetworkAvailable
@@ -22,7 +22,7 @@ class FavoritesFragment : Fragment() {
     private val favoritesFragmentViewModel: FavoritesFragmentViewModel by viewModel()
     private val action = R.id.action_favoritesFragment_to_movieDetailsFragment
     private lateinit var gridLayoutManager: GridLayoutManager
-    private lateinit var adapter: MoviesRecyclerViewAdapter
+    private lateinit var adapter: MoviesGridRecyclerViewAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,7 +49,7 @@ class FavoritesFragment : Fragment() {
     private fun setUpRecyclerviewAdapter() {
         gridLayoutManager = GridLayoutManager(requireContext(), 3)
         adapter =
-            MoviesRecyclerViewAdapter(requireView(), requireContext(), arrayListOf(), action)
+            MoviesGridRecyclerViewAdapter(requireView(), requireContext(), arrayListOf(), action)
         binding.apply {
             favoriteMoviesRecyclerView.layoutManager = gridLayoutManager
             favoriteMoviesRecyclerView.adapter = adapter

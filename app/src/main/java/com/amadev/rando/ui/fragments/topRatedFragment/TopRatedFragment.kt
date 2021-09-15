@@ -9,10 +9,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amadev.rando.R
 import com.amadev.rando.adapter.EndlessRecyclerOnScrollListener
-import com.amadev.rando.adapter.MoviesRecyclerViewAdapter
+import com.amadev.rando.adapter.MoviesGridRecyclerViewAdapter
 import com.amadev.rando.databinding.FragmentTopRatedBinding
 import com.amadev.rando.model.MovieDetailsResults
-import com.amadev.rando.util.Util
 import com.amadev.rando.util.Util.isNetworkAvailable
 import com.amadev.rando.util.Util.showToast
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -24,7 +23,7 @@ class TopRatedFragment : Fragment() {
     private val topRatedFragmentViewModel: TopRatedFragmentViewModel by viewModel()
     private val action = R.id.action_topRatedFragment_to_movieDetailsFragment
     lateinit var gridLayoutManager: GridLayoutManager
-    lateinit var adapter: MoviesRecyclerViewAdapter
+    lateinit var adapter: MoviesGridRecyclerViewAdapter
 
     private var currentPage = 0
 
@@ -53,7 +52,7 @@ class TopRatedFragment : Fragment() {
     private fun setUpRecyclerviewAdapter() {
         gridLayoutManager = GridLayoutManager(requireContext(), 3)
         adapter =
-            MoviesRecyclerViewAdapter(requireView(), requireContext(), arrayListOf(), action)
+            MoviesGridRecyclerViewAdapter(requireView(), requireContext(), arrayListOf(), action)
         binding.apply {
             topRatedRecyclerView.layoutManager = gridLayoutManager
             topRatedRecyclerView.adapter = adapter

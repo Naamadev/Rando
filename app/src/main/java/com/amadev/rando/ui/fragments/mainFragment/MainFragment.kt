@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.amadev.rando.R
 import com.amadev.rando.adapter.MoviesRecyclerViewAdapter
 import com.amadev.rando.adapter.UpcomingMoviesRecyclerViewAdapter
@@ -31,9 +30,17 @@ class MainFragment : Fragment() {
     private val action = R.id.action_mainFragment_to_movieDetailsFragment
     private var isUserLoggedIn: Boolean = false
 
+    private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var topRatedAdapter: MoviesRecyclerViewAdapter
+    private lateinit var popularAdapter: MoviesRecyclerViewAdapter
+    private lateinit var nowPlayingAdapter: MoviesRecyclerViewAdapter
+    private lateinit var upcomingAdapter: UpcomingMoviesRecyclerViewAdapter
+
     companion object {
         const val DELAY_TIME = 1500L
+        val currentPage = (0..25).random()
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -47,6 +54,10 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (isNetworkAvailable(requireContext())) {
+            setUpTopRatedRecyclerviewAdapter()
+            setUpPopularRecyclerviewAdapter()
+            setUpNowPlayingRecyclerviewAdapter()
+            setUpUpcomingRecyclerviewAdapter()
             checkIsUserLoggedIn()
             getMovies()
             setUpObservers()
@@ -56,7 +67,6 @@ class MainFragment : Fragment() {
         } else {
             showToast(requireContext(), getString(R.string.noInternetConnection))
         }
-
     }
 
     private fun setUpOnBackPressedCallback() {
@@ -224,16 +234,16 @@ class MainFragment : Fragment() {
         mainFragmentViewModel.apply {
             binding.apply {
                 topRatedMoviesResultsLiveData.observe(viewLifecycleOwner) {
-                    setUpMoviesHorizontalRecyclerViewAdapter(it, topRatedRecyclerView)
+                    setUpMoviesHorizontalRecyclerViewAdapter(it, topRatedAdapter)
                 }
                 popularMoviesResultsLiveData.observe(viewLifecycleOwner) {
-                    setUpMoviesHorizontalRecyclerViewAdapter(it, popularRecyclerView)
+                    setUpMoviesHorizontalRecyclerViewAdapter(it, popularAdapter)
                 }
                 upcomingMoviesResultsLiveData.observe(viewLifecycleOwner) {
-                    setUpUpcomingMoviesHorizontalRecyclerViewAdapter(it)
+                    setUpUpcomingMoviesHorizontalRecyclerViewAdapter(it, upcomingAdapter)
                 }
                 nowPlayingMoviesLiveData.observe(viewLifecycleOwner) {
-                    setUpMoviesHorizontalRecyclerViewAdapter(it, nowPlayingRecyclerView)
+                    setUpMoviesHorizontalRecyclerViewAdapter(it, nowPlayingAdapter)
                 }
                 searchedMoviesLiveData.observe(viewLifecycleOwner) {
                     setUpSearchedMoviesRecyclerViewAdapter(it)
@@ -262,46 +272,93 @@ class MainFragment : Fragment() {
 
     private fun getMovies() {
         mainFragmentViewModel.apply {
-            getTopRatedMovies()
-            getPopularMovies()
-            getUpcomingMovies()
-            getNowPlayingMovies()
+            getTopRatedMovies(currentPage)
+            getPopularMovies(currentPage)
+            getUpcomingMovies(currentPage)
+            getNowPlayingMovies(currentPage)
+        }
+    }
+
+
+    private fun setUpTopRatedRecyclerviewAdapter() {
+        linearLayoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        topRatedAdapter =
+            MoviesRecyclerViewAdapter(requireView(), requireContext(), arrayListOf(), action)
+        binding.apply {
+            topRatedRecyclerView.apply {
+                layoutManager = linearLayoutManager
+                adapter = topRatedAdapter
+            }
+        }
+    }
+
+    private fun setUpPopularRecyclerviewAdapter() {
+        linearLayoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        popularAdapter =
+            MoviesRecyclerViewAdapter(requireView(), requireContext(), arrayListOf(), action)
+        binding.apply {
+            popularRecyclerView.apply {
+                layoutManager = linearLayoutManager
+                adapter = popularAdapter
+            }
+        }
+    }
+
+    private fun setUpNowPlayingRecyclerviewAdapter() {
+        linearLayoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        nowPlayingAdapter =
+            MoviesRecyclerViewAdapter(requireView(), requireContext(), arrayListOf(), action)
+        binding.apply {
+            nowPlayingRecyclerView.apply {
+                layoutManager = linearLayoutManager
+                adapter = nowPlayingAdapter
+            }
         }
     }
 
     private fun setUpMoviesHorizontalRecyclerViewAdapter(
         list: ArrayList<MovieDetailsResults>,
-        recyclerView: RecyclerView
+        adapter: MoviesRecyclerViewAdapter
     ) {
-        val layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-
-        val adapter = MoviesRecyclerViewAdapter(requireView(), requireContext(), arrayListOf(), action)
+        adapter.notifyDataSetChanged()
         adapter.list.apply {
             clear()
             addAll(list)
-            binding.apply {
-                recyclerView.layoutManager = layoutManager
-                recyclerView.adapter = adapter
+        }
+    }
+
+    private fun setUpUpcomingRecyclerviewAdapter() {
+        upcomingAdapter =
+            UpcomingMoviesRecyclerViewAdapter(requireView(), requireContext(), arrayListOf())
+        binding.apply {
+            upcomingRecyclerView.apply {
+                layoutManager = upcomingRecyclerView.getCarouselLayoutManager()
+                adapter = upcomingAdapter
+                setInfinite(true)
+                setAlpha(true)
             }
         }
     }
 
     private fun setUpUpcomingMoviesHorizontalRecyclerViewAdapter(
-        list: ArrayList<MovieDetailsResults>
+        list: ArrayList<MovieDetailsResults>,
+        adapter: UpcomingMoviesRecyclerViewAdapter
     ) {
-        val adapter =
-            UpcomingMoviesRecyclerViewAdapter(requireView(), requireContext(), arrayListOf())
-
+//        val adapter =
+//            UpcomingMoviesRecyclerViewAdapter(requireView(), requireContext(), arrayListOf())
+        adapter.notifyDataSetChanged()
         adapter.list.apply {
             clear()
             addAll(list)
-            binding.apply {
-                upcomingRecyclerView.layoutManager = upcomingRecyclerView.getCarouselLayoutManager()
-                upcomingRecyclerView.adapter = adapter
-                upcomingRecyclerView.setInfinite(true)
-                upcomingRecyclerView.setAlpha(true)
-            }
+//            binding.apply {
+//                upcomingRecyclerView.layoutManager = upcomingRecyclerView.getCarouselLayoutManager()
+//                upcomingRecyclerView.adapter = adapter
+//                upcomingRecyclerView.setInfinite(true)
+//                upcomingRecyclerView.setAlpha(true)
+//            }
         }
     }
 }

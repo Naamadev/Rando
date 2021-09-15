@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amadev.rando.R
 import com.amadev.rando.adapter.EndlessRecyclerOnScrollListener
-import com.amadev.rando.adapter.MoviesRecyclerViewAdapter
+import com.amadev.rando.adapter.MoviesGridRecyclerViewAdapter
 import com.amadev.rando.databinding.FragmentNowPlayingBinding
 import com.amadev.rando.model.MovieDetailsResults
 import com.amadev.rando.util.Util.isNetworkAvailable
@@ -23,7 +23,7 @@ class NowPlayingFragment : Fragment() {
     private val nowPlayingViewModel: NowPlayingViewModel by viewModel()
     private val action = R.id.action_nowPlayingFragment_to_movieDetailsFragment
     lateinit var gridLayoutManager: GridLayoutManager
-    lateinit var adapter: MoviesRecyclerViewAdapter
+    lateinit var adapter: MoviesGridRecyclerViewAdapter
 
     private var currentPage = 0
 
@@ -52,7 +52,7 @@ class NowPlayingFragment : Fragment() {
     private fun setUpRecyclerviewAdapter() {
         gridLayoutManager = GridLayoutManager(requireContext(), 3)
         adapter =
-            MoviesRecyclerViewAdapter(requireView(), requireContext(), arrayListOf(), action)
+            MoviesGridRecyclerViewAdapter(requireView(), requireContext(), arrayListOf(), action)
         binding.apply {
             nowPlayingRecyclerView.layoutManager = gridLayoutManager
             nowPlayingRecyclerView.adapter = adapter

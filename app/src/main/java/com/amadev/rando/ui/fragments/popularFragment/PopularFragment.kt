@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amadev.rando.R
 import com.amadev.rando.adapter.EndlessRecyclerOnScrollListener
-import com.amadev.rando.adapter.MoviesRecyclerViewAdapter
+import com.amadev.rando.adapter.MoviesGridRecyclerViewAdapter
 import com.amadev.rando.databinding.FragmentPopularBinding
 import com.amadev.rando.model.MovieDetailsResults
 import com.amadev.rando.util.Util.isNetworkAvailable
@@ -24,7 +24,7 @@ class PopularFragment : Fragment() {
 
     private val action = R.id.action_popularFragment_to_movieDetailsFragment
     lateinit var gridLayoutManager: GridLayoutManager
-    lateinit var adapter: MoviesRecyclerViewAdapter
+    lateinit var adapter: MoviesGridRecyclerViewAdapter
 
     private var currentPage = 0
 
@@ -54,7 +54,7 @@ class PopularFragment : Fragment() {
     private fun setUpRecyclerviewAdapter() {
         gridLayoutManager = GridLayoutManager(requireContext(), 3)
         adapter =
-            MoviesRecyclerViewAdapter(requireView(), requireContext(), arrayListOf(), action)
+            MoviesGridRecyclerViewAdapter(requireView(), requireContext(), arrayListOf(), action)
         binding.apply {
             popularRecyclerView.layoutManager = gridLayoutManager
             popularRecyclerView.adapter = adapter
