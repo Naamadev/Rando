@@ -78,7 +78,7 @@
             android:layout_width="300dp"
             android:layout_height="50dp"
             android:layout_marginTop="16dp"
-            android:layout_marginBottom="64dp"
+            android:layout_marginBottom="102dp"
             android:background="@drawable/four_corners_radius_background"
             android:fontFamily="@font/glacial_indifference_regular"
             android:hint="@string/repeat_password"
@@ -109,6 +109,51 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
+        <CheckBox
+            android:id="@+id/privacyPolicyCheckBox"
+            android:layout_width="32dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="@+id/password_repeat_input"
+            app:layout_constraintTop_toBottomOf="@+id/password_repeat_input" />
+
+        <TextView
+            android:id="@+id/privacyPolicyTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/glacial_indifference_bold"
+            android:text="@string/i_accept_privacy_policy"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/privacyPolicyCheckBox"
+            app:layout_constraintStart_toEndOf="@+id/privacyPolicyCheckBox"
+            app:layout_constraintTop_toTopOf="@+id/privacyPolicyCheckBox" />
+
+        <CheckBox
+            android:id="@+id/termsNConditionsCheckBox"
+            android:layout_width="32dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="@+id/password_repeat_input"
+            app:layout_constraintTop_toBottomOf="@+id/privacyPolicyCheckBox" />
+
+        <TextView
+            android:id="@+id/termsOfUseTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:fontFamily="@font/glacial_indifference_bold"
+            android:text="@string/i_accept_terms_conditions"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/termsNConditionsCheckBox"
+            app:layout_constraintStart_toEndOf="@+id/termsNConditionsCheckBox"
+            app:layout_constraintTop_toTopOf="@+id/termsNConditionsCheckBox" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ProgressBar

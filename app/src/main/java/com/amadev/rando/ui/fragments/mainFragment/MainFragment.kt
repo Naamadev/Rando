@@ -239,6 +239,7 @@ class MainFragment : Fragment() {
                     setUpSearchedMoviesRecyclerViewAdapter(it)
                 }
                 isUserLoggedIn.observe(viewLifecycleOwner) {
+                    if (it) setUpViewVisibilityVisible(binding.logout)
                     this@MainFragment.isUserLoggedIn = it
                 }
             }

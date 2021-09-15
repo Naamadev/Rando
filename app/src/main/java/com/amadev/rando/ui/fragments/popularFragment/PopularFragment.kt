@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amadev.rando.R
@@ -13,7 +12,6 @@ import com.amadev.rando.adapter.EndlessRecyclerOnScrollListener
 import com.amadev.rando.adapter.MoviesRecyclerViewAdapter
 import com.amadev.rando.databinding.FragmentPopularBinding
 import com.amadev.rando.model.MovieDetailsResults
-import com.amadev.rando.util.Util
 import com.amadev.rando.util.Util.isNetworkAvailable
 import com.amadev.rando.util.Util.showToast
 import org.koin.android.viewmodel.ext.android.viewModel

@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.amadev.rando.R
 import com.amadev.rando.databinding.FragmentSignUpBinding
-import com.amadev.rando.util.Util
+import com.amadev.rando.ui.dialogs.informationDialog.InformationDialog
 import com.amadev.rando.util.Util.isNetworkAvailable
 import com.amadev.rando.util.Util.showToast
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -41,9 +41,49 @@ class SignUpFragment : Fragment() {
     }
 
     private fun setUpOnClickListeners() {
-        binding.signupBtn.setOnClickListener {
-            sendInputsToViewModel()
+        binding.apply {
+            signupBtn.setOnClickListener {
+
+                if (bothBoxesChecked()) {
+                    sendInputsToViewModel()
+                } else {
+                    showToast(requireContext(), getString(R.string.youMustCheckBothBoxes))
+                }
+            }
+            privacyPolicyTextView.setOnClickListener {
+                providePrivacyPolicyDialog()
+            }
+            termsOfUseTextView.setOnClickListener {
+                provideTermsAncConditionsDialog()
+            }
         }
+
+    }
+
+    private fun bothBoxesChecked(): Boolean {
+        var boxesChecked = false
+        binding.apply {
+            if (privacyPolicyCheckBox.isChecked && termsNConditionsCheckBox.isChecked) {
+                boxesChecked = true
+            }
+        }
+        return boxesChecked
+    }
+
+    private fun provideTermsAncConditionsDialog() {
+        val dialog = InformationDialog(
+            getString(R.string.terms_n_conditions_title),
+            getString(R.string.terms_n_conditionsText)
+        )
+        dialog.show(childFragmentManager, null)
+    }
+
+    private fun providePrivacyPolicyDialog() {
+        val dialog = InformationDialog(
+            getString(R.string.privacyPolicyTitle),
+            getString(R.string.privacyPolicyText)
+        )
+        dialog.show(childFragmentManager, null)
     }
 
     private fun setUpProgressBarVisibility() {

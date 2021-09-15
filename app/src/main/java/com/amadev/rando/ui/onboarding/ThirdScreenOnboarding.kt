@@ -28,12 +28,7 @@ class ThirdScreenOnboarding : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Animations.animateAlphaWithHandlerDelay(binding.stopTv, 700, 1.0f, 300)
-        Animations.animateAlphaWithHandlerDelay(binding.browsingthewebTv, 700, 1.0f, 1000)
-        Animations.animateAlphaWithHandlerDelay(binding.shuffleitTv, 1000, 1.0f, 2000)
-        Animations.animateAlphaWithHandlerDelay(binding.finish, 1000, 1.0f, 2000)
-        Animations.animateAlphaWithHandlerDelay(binding.previous, 1000, 1.0f, 2000)
-
+        animateViews()
         val viewPager = activity?.findViewById<ViewPager2>(R.id.viewPager)
 
         binding.finish.setOnClickListener {
@@ -45,7 +40,12 @@ class ThirdScreenOnboarding : Fragment() {
             viewPager?.currentItem = 1
         }
 
+    }
 
+    private fun animateViews() {
+        Animations.animateAlphaWithHandlerDelay(binding.stopTv, 700, 1.0f, 300)
+        Animations.animateAlphaWithHandlerDelay(binding.finish, 1000, 1.0f, 2000)
+        Animations.animateAlphaWithHandlerDelay(binding.previous, 1000, 1.0f, 2000)
     }
 
     private fun onBoardingFinished() {
