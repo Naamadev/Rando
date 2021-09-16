@@ -26,7 +26,7 @@ class FavoritesFragmentViewModel(
         val thereIsNoMoviesHere = Messages.ThereIsNoMoviesHere
     }
 
-    private val username = provideFirebaseUsername()
+    private var uuid = provideFirebaseUuiD()
 
     private val _favoritesMoviesMutableLiveData = MutableLiveData<ArrayList<MovieDetailsResults>>()
     val favoritesMoviesLiveData = _favoritesMoviesMutableLiveData
@@ -41,7 +41,7 @@ class FavoritesFragmentViewModel(
     fun getFavoriteMovies() {
         val firebaseReference =
             firebaseDatabase.getReference("Users")
-                .child(Util.replaceFirebaseForbiddenChars(username))
+                .child(uuid)
                 .child(FAVORITE_MOVIES)
 
         val query: Query = firebaseReference
@@ -83,14 +83,12 @@ class FavoritesFragmentViewModel(
             is Messages.ThereIsNoMoviesHere -> context.getString(R.string.thereIsNoMoviesHere)
         }
 
-    private fun provideFirebaseUsername(): String {
+    private fun provideFirebaseUuiD() : String {
         val currentUser = firebaseAuth.currentUser
-        lateinit var username: String
-        currentUser?.let {
-            for (profiler in it.providerData) {
-                username = profiler.email.toString()
-            }
+        var uid = ""
+        if (currentUser != null) {
+            uid = currentUser.uid
         }
-        return username
+        return uid
     }
 }

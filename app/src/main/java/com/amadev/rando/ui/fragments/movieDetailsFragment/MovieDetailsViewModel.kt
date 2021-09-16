@@ -58,7 +58,7 @@ class MovieDetailsViewModel(
     private val _isUserLoggedInMutableLiveData = MutableLiveData<Boolean>()
     var isUserLoggedIn = _isUserLoggedInMutableLiveData
 
-    private var username = provideFirebaseUsername()
+    private var uuid = provideFirebaseUuiD()
 
 
     fun setUpMovieDetails(results: MovieDetailsResults?) {
@@ -122,7 +122,7 @@ class MovieDetailsViewModel(
     fun removeCurrentMovieFromFavoriteMovies(movieId: Int?) {
         val firebaseReference =
             firebaseDatabase.getReference("Users")
-                .child(replaceFirebaseForbiddenChars(username))
+                .child(replaceFirebaseForbiddenChars(uuid))
                 .child(FAVORITE_MOVIES)
                 .child(movieId.toString())
 
@@ -139,7 +139,7 @@ class MovieDetailsViewModel(
     fun addCurrentMovieToFavoriteMovies() {
         val firebaseReference =
             firebaseDatabase.getReference("Users")
-                .child(replaceFirebaseForbiddenChars(username))
+                .child(replaceFirebaseForbiddenChars(uuid))
                 .child(FAVORITE_MOVIES)
 
         firebaseReference
@@ -157,7 +157,7 @@ class MovieDetailsViewModel(
     fun getFavoriteMovies() {
         val firebaseReference =
             firebaseDatabase.getReference("Users")
-                .child(replaceFirebaseForbiddenChars(username))
+                .child(replaceFirebaseForbiddenChars(uuid))
                 .child(FAVORITE_MOVIES)
 
         val query: Query = firebaseReference
@@ -178,15 +178,14 @@ class MovieDetailsViewModel(
         })
     }
 
-    private fun provideFirebaseUsername(): String {
+    private fun provideFirebaseUuiD() : String {
         val currentUser = firebaseAuth.currentUser
-        currentUser?.let {
-            for (profiler in it.providerData) {
-                username = profiler.email.toString()
-            }
+        var uid = ""
+        if (currentUser != null) {
+            uid = currentUser.uid
         }
-        return username
-    }
+        return uid
+}
 
     private fun getMessage(message: Messages) =
         when (message) {

@@ -38,7 +38,7 @@ class MainFragment : Fragment() {
 
     companion object {
         const val DELAY_TIME = 1500L
-        val currentPage = (0..25).random()
+        val currentPage = (0..10).random()
     }
 
     override fun onCreateView(
