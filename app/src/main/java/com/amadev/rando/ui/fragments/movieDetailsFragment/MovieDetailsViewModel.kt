@@ -94,6 +94,7 @@ class MovieDetailsViewModel(
     }
 
     private fun getCastDetails(movieId : Int?) {
+        val castList = ArrayList<CastModelResults>()
         viewModelScope.launch(Dispatchers.IO) {
             val response =
                 ApiService(apiClient).getCastDetails(movieId)
@@ -101,14 +102,12 @@ class MovieDetailsViewModel(
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     responseBody?.let {
-                        val castList: ArrayList<CastModelResults> = ArrayList()
-                        for (i in responseBody.cast)
-                            i.profile_path.let {
-                                castList.add(i)
+                        it.cast.forEach { results ->
+                            if (results.profile_path.isNullOrEmpty().not()) {
+                                castList.add(results)
                             }
-                        if (castList.isNotEmpty()) {
-                            _castList.postValue(castList)
                         }
+                        _castList.postValue(castList)
                     }
                 }
             }

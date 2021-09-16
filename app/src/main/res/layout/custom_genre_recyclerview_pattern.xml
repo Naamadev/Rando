@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
 
     <TextView
         android:id="@+id/genreName"
@@ -14,6 +15,7 @@
         android:fontFamily="@font/glacial_indifference_regular"
         android:shadowColor="@color/black"
         android:shadowRadius="1"
+        android:gravity="center"
         android:text="genre1"
         android:textColor="@color/white"
         android:textSize="13sp"

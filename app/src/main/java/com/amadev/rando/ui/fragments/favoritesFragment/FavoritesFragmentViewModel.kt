@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.amadev.rando.R
 import com.amadev.rando.model.MovieDetailsResults
-import com.amadev.rando.util.Util
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
@@ -39,6 +38,8 @@ class FavoritesFragmentViewModel(
 
 
     fun getFavoriteMovies() {
+        val favoriteMoviesList = ArrayList<MovieDetailsResults>()
+
         val firebaseReference =
             firebaseDatabase.getReference("Users")
                 .child(uuid)
@@ -49,22 +50,13 @@ class FavoritesFragmentViewModel(
             override fun onDataChange(snapshot: DataSnapshot) {
                 _progressBarVisibilityMutableLiveData.value = false
 
-                val favoriteMoviesList = ArrayList<MovieDetailsResults>()
                 snapshot.children.forEach { data ->
                     data.getValue(MovieDetailsResults::class.java)
                         ?.let { favoriteMoviesList.add(it) }
                 }
 
                 if (favoriteMoviesList.isEmpty().not()) {
-                    when {
-                        favoriteMoviesList.size > 1 -> {
-                            _favoritesMoviesMutableLiveData.value =
-                                favoriteMoviesList.reversed() as ArrayList<MovieDetailsResults>
-                        }
-                        else -> {
-                            _favoritesMoviesMutableLiveData.value = favoriteMoviesList
-                        }
-                    }
+                    _favoritesMoviesMutableLiveData.value = favoriteMoviesList
                 } else {
                     _popUpMessageMutableLiveData.value = getMessages(thereIsNoMoviesHere)
                 }

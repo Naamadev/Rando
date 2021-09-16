@@ -74,58 +74,79 @@ class MainFragmentViewModel(
     }
 
     fun getNowPlayingMovies(page : Int) {
+        val resultsList = ArrayList<MovieDetailsResults>()
+
         viewModelScope.launch(Dispatchers.IO) {
             val response = ApiService(apiClient).getNowPlayingMovies(page)
             if (response.isSuccessful) {
                 response.body()?.let {
-                    val results = it.results.reversed() as ArrayList<MovieDetailsResults>
-                    nowPlayingMoviesMutableLiveData.postValue(results)
+                    it.results.forEach { results ->
+                        if (results.poster_path.isNullOrEmpty().not())
+                            resultsList.add(results)
+                    }
+                    nowPlayingMoviesMutableLiveData.postValue(resultsList)
                 }
             }
         }
     }
 
     fun getUpcomingMovies(page: Int) {
+        val resultsList = ArrayList<MovieDetailsResults>()
+
         viewModelScope.launch(Dispatchers.IO) {
             val response = ApiService(apiClient).getUpcomingMovie(page)
             if (response.isSuccessful) {
                 response.body()?.let {
-                    val results = it.results as ArrayList<MovieDetailsResults>
-                    upComingMoviesResultsMutableLiveData.postValue(results)
+                    it.results.forEach { results ->
+                        if (results.poster_path.isNullOrEmpty().not()) {
+                            resultsList.add(results)
+                        }
+                    }
+                    upComingMoviesResultsMutableLiveData.postValue(resultsList)
                 }
+            } else {
+                popUpMessageMutableLiveData.postValue(getMessage(somethingWentWrong))
             }
         }
     }
 
     fun getTopRatedMovies(page: Int) {
+        val resultsList = ArrayList<MovieDetailsResults>()
+
         viewModelScope.launch(Dispatchers.IO) {
             val response = ApiService(apiClient).getTopRatedMovie(page)
             if (response.isSuccessful) {
                 val responseBody = response.body()
                 responseBody?.let {
-                    val results = responseBody.results as ArrayList<MovieDetailsResults>
-                        topRatedMoviesResultsMutableLiveData.postValue(results)
+                    it.results.forEach { results ->
+                        if (results.poster_path.isNullOrEmpty().not()) {
+                            resultsList.add(results)
+                        }
+                    }
+                    topRatedMoviesResultsMutableLiveData.postValue(resultsList)
                 }
             } else {
                 popUpMessageMutableLiveData.postValue(getMessage(somethingWentWrong))
             }
-
         }
     }
 
     fun getPopularMovies(page: Int) {
+        val resultsList = ArrayList<MovieDetailsResults>()
+
         viewModelScope.launch(Dispatchers.IO) {
             val response = ApiService(apiClient).getPopularMovie(page)
             if (response.isSuccessful) {
                 val responseBody = response.body()
-
                 responseBody?.let {
-                    val results = responseBody.results as ArrayList<MovieDetailsResults>
-                    results.apply {
-                        popularMoviesResultsMutableLiveData.postValue(results)
+                    it.results.forEach { results ->
+                        if (results.poster_path.isNullOrEmpty().not()) {
+                            resultsList.add(results)
+                        }
                     }
+                    popularMoviesResultsMutableLiveData.postValue(resultsList)
                 }
-            } else if (response.isSuccessful.not()) {
+            } else {
                 popUpMessageMutableLiveData.postValue(getMessage(somethingWentWrong))
             }
         }
