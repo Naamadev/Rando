@@ -1,7 +1,6 @@
 package com.amadev.rando.ui.fragments.movieDetailsFragment
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +9,6 @@ import com.amadev.rando.data.ApiClient
 import com.amadev.rando.data.ApiService
 import com.amadev.rando.model.CastModelResults
 import com.amadev.rando.model.MovieDetailsResults
-import com.amadev.rando.util.Util.replaceFirebaseForbiddenChars
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +20,6 @@ sealed class Messages {
     object AddedToFavorites : Messages()
     object MovieRemovedFromFavorites : Messages()
     object FailedToRemoveMovie : Messages()
-    object YouMustBeLoggedIn : Messages()
 }
 
 class MovieDetailsViewModel(
@@ -38,7 +35,6 @@ class MovieDetailsViewModel(
         val addedToFavorites = Messages.AddedToFavorites
         val movieRemovedFromFavorites = Messages.MovieRemovedFromFavorites
         val failedToRemoveMovie = Messages.FailedToRemoveMovie
-        val youMustBeLoggedIn = Messages.YouMustBeLoggedIn
     }
 
     private val _movieDetailsMutableLiveData = MutableLiveData<MovieDetailsResults?>()
@@ -185,7 +181,7 @@ class MovieDetailsViewModel(
             uid = currentUser.uid
         }
         return uid
-}
+    }
 
     private fun getMessage(message: Messages) =
         when (message) {
@@ -194,6 +190,5 @@ class MovieDetailsViewModel(
             is Messages.FailedToLoadFavoriteMovies -> context.getString(R.string.failedToLoadFavoriteMovies)
             is Messages.MovieRemovedFromFavorites -> context.getString(R.string.movieRemovedFromFavorites)
             is Messages.FailedToRemoveMovie -> context.getString(R.string.failedToRemoveMovie)
-            is Messages.YouMustBeLoggedIn -> context.getString(R.string.youMustBeLoggedIn)
         }
 }

@@ -13,13 +13,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.snackbar.Snackbar
 
-
 object Util {
-    
+
     fun getProgressDrawable(context: Context): CircularProgressDrawable {
         return CircularProgressDrawable(context).apply {
-            strokeWidth = 10f
-            centerRadius = 50f
+            strokeWidth = 3f
+            centerRadius = 30f
             colorSchemeColors
             start()
         }
@@ -48,11 +47,6 @@ object Util {
             show()
         }
     }
-
-    fun replaceFirebaseForbiddenChars(string: String) =
-        string
-            .replace("@", "_AT_")
-            .replace(".", "_DOT_")
 
     fun isNetworkAvailable(context: Context): Boolean {
         var result = false

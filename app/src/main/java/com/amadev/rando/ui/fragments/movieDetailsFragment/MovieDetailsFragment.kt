@@ -30,9 +30,9 @@ class MovieDetailsFragment : Fragment() {
     private val binding get() = _binding!!
     private val movieDetailsViewModel: MovieDetailsViewModel by viewModel()
     lateinit var intent: Intent
-    var movieId: Int? = null
+    private var movieId: Int? = null
     private var userLogged: Boolean? = null
-    private var posterEndPoint: String? = null
+//    private var movieid: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -83,7 +83,7 @@ class MovieDetailsFragment : Fragment() {
     }
 
     private fun shareMovie() {
-        val imageUri = BuildConfig.TMDB_PICTURE_BASE_URL + posterEndPoint
+        val imageUri = BuildConfig.TMDB_SHARE_BASE_URL + movieId
 
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
@@ -123,7 +123,8 @@ class MovieDetailsFragment : Fragment() {
                     showSnackBar(requireView(), it)
                 }
                 movieDetailsMutableLiveData.observe(viewLifecycleOwner) {
-                    it?.id?.let { movieIdNo -> movieId = movieIdNo }
+                    it?.id?.let { movieIdNo ->
+                        movieId = movieIdNo }
                     it?.genre_ids?.let { genresIntList ->
                         setUpMovieGenresRecyclerView(setUpGenreList(genresIntList))
                     }
@@ -141,7 +142,6 @@ class MovieDetailsFragment : Fragment() {
                         overviewTv.text = overviewText.trim()
                     }
                     it?.poster_path?.let { uri ->
-                        posterEndPoint = uri
                         movieImage.loadImageWithGlide(uri, getProgressDrawable(requireContext()))
                     }
                 }

@@ -105,7 +105,6 @@ class MainFragment : Fragment() {
         activity?.startActivity(Intent.createChooser(emailIntent, "Send email..."))
     }
 
-
     private fun setUpNavHeaderUsername(username: String?) {
         val usernameTv = navView.getHeaderView(0).findViewById<TextView>(R.id.username)
         usernameTv.text = username
@@ -118,7 +117,9 @@ class MainFragment : Fragment() {
     private fun setUpOnBackPressedCallback() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (!isUserLoggedIn) {
+                if (binding.searchMoviesEditText.visibility == View.VISIBLE) {
+                    setUpSearchOffViewsVisibility()
+                } else if (!isUserLoggedIn) {
                     navigateToSignInOrSignUpFragment()
                 } else {
                     activity?.finishAffinity()
@@ -126,7 +127,6 @@ class MainFragment : Fragment() {
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-
     }
 
     private fun navigateToSignInOrSignUpFragment() {
@@ -296,7 +296,6 @@ class MainFragment : Fragment() {
                     setUpSearchedMoviesRecyclerViewAdapter(it)
                 }
                 isUserLoggedIn.observe(viewLifecycleOwner) {
-                    if (it) setUpViewVisibilityVisible(binding.logout)
                     this@MainFragment.isUserLoggedIn = it
                 }
                 username.observe(viewLifecycleOwner) {

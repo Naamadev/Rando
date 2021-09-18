@@ -34,15 +34,11 @@ class CastRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder) {
-            binding.actorName.text = list[position].name
-            binding.actorImageRecyclerview.loadImageWithGlide(
-                list[position].profile_path,
-                getProgressDrawable(context)
-            )
-        }
+            setUpViews(holder, position)
 
-        holder.itemView.setOnClickListener {
-            showCastDialog(list[position])
+            itemView.setOnClickListener {
+                showCastDialog(list[position])
+            }
         }
     }
 
@@ -50,13 +46,21 @@ class CastRecyclerViewAdapter(
         return list.size
     }
 
-    private fun showCastDialog(cast : CastModelResults) {
+    private fun setUpViews(holder: ViewHolder, position: Int) {
+        with(holder) {
+            binding.apply {
+                actorName.text = list[position].name
+                actorImageRecyclerview.loadImageWithGlide(
+                    list[position].profile_path,
+                    getProgressDrawable(context)
+                )
+            }
+        }
+    }
+
+    private fun showCastDialog(cast: CastModelResults) {
         val fragmentDialog = CastDetailsDialog(cast)
         fragmentDialog.show(fragmentManager, "")
     }
 
 }
-
-
-
-

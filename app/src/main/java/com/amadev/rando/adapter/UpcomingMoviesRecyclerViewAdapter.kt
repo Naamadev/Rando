@@ -18,7 +18,7 @@ class UpcomingMoviesRecyclerViewAdapter(
     var context: Context,
     var list: ArrayList<MovieDetailsResults>
 ) : RecyclerView.Adapter<UpcomingMoviesRecyclerViewAdapter.ViewHolder>() {
-    
+
     class ViewHolder(val binding: CustomUpcomingMoviesRecyclerviewPatternBinding) :
         RecyclerView.ViewHolder(binding.root)
 
@@ -30,6 +30,25 @@ class UpcomingMoviesRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder) {
+            setUpViews(holder, position)
+
+            itemView.setOnClickListener {
+                val bundle = Bundle()
+                bundle.putParcelable("movieDetails", list[position])
+                Navigation.createNavigateOnClickListener(
+                    R.id.action_mainFragment_to_movieDetailsFragment,
+                    bundle
+                ).onClick(holder.itemView)
+            }
+        }
+    }
+
+    override fun getItemCount(): Int {
+        return list.size
+    }
+
+    private fun setUpViews(holder: ViewHolder, position: Int) {
+        with(holder) {
             binding.apply {
                 movieName.text = list[position].title
                 rating.text = list[position].vote_average.toString()
@@ -40,23 +59,5 @@ class UpcomingMoviesRecyclerViewAdapter(
                 )
             }
         }
-
-        holder.itemView.setOnClickListener {
-            val bundle = Bundle()
-            bundle.putParcelable("movieDetails", list[position])
-            Navigation.createNavigateOnClickListener(
-                R.id.action_mainFragment_to_movieDetailsFragment,
-                bundle
-            ).onClick(holder.itemView)
-        }
     }
-
-    override fun getItemCount(): Int {
-        return list.size
-    }
-
 }
-
-
-
-

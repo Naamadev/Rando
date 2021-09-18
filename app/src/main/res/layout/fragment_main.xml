@@ -39,18 +39,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <LinearLayout
-                    android:id="@+id/logout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/ic_baseline_exit_to_app_24"
-                    android:orientation="horizontal"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@id/appName"
-                    app:layout_constraintStart_toEndOf="@id/appName"
-                    app:layout_constraintTop_toTopOf="@id/appName" />
-
                 <TextView
                     android:id="@+id/upcoming"
                     android:layout_width="wrap_content"
@@ -200,6 +188,15 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/nowPlaying" />
+
+                <LinearLayout
+                    android:id="@+id/bottomDistance"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:orientation="vertical"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/nowPlayingRecyclerView"/>
 
                 <TextView
                     android:id="@+id/searchedMoviesResults"

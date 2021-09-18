@@ -40,7 +40,7 @@ val viewModelModule = module {
     viewModel { PopularFragmentViewModel(get()) }
     viewModel { NowPlayingViewModel(get()) }
     viewModel { SignUpViewModel(get(), get()) }
-    viewModel { SignInViewModel(get(), get()) }
+    viewModel { SignInViewModel(get(), get(), get()) }
     viewModel { SignInOrSignUpViewModel() }
     viewModel { ForgotPasswordDialogViewModel(get(), get()) }
     viewModel { CastDetailsViewModel() }

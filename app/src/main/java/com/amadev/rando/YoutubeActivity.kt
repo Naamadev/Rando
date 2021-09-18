@@ -1,7 +1,7 @@
 package com.amadev.rando
 
 import android.os.Bundle
-import android.widget.Toast
+import com.amadev.rando.util.Util.showToast
 import com.google.android.youtube.player.YouTubeBaseActivity
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
@@ -39,8 +39,7 @@ class YoutubeActivity : YouTubeBaseActivity() {
                 p0: YouTubePlayer.Provider?,
                 p1: YouTubeInitializationResult?
             ) {
-                Toast.makeText(this@YoutubeActivity, "Failed to play video", Toast.LENGTH_SHORT)
-                    .show()
+                showToast(this@YoutubeActivity, "Failed to play video")
             }
         })
     }

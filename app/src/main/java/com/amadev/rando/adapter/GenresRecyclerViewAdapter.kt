@@ -20,16 +20,18 @@ class GenresRecyclerViewAdapter(val view: View, var context: Context, var list: 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        setUpViews(holder, position)
+    }
+
+    override fun getItemCount(): Int {
+        return list.size
+    }
+
+    private fun setUpViews(holder: ViewHolder, position: Int) {
         with(holder) {
             binding.apply {
                 genreName.text = list[position]
             }
         }
     }
-
-    override fun getItemCount(): Int {
-        return list.size
-    }
 }
-
-

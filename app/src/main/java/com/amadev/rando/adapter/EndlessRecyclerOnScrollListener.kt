@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 abstract class EndlessRecyclerOnScrollListener(private val mLinearLayoutManager: GridLayoutManager) :
     RecyclerView.OnScrollListener() {
+
     private var previousTotal = 0
     private var loading = true
     private val visibleThreshold = 9
@@ -12,6 +13,7 @@ abstract class EndlessRecyclerOnScrollListener(private val mLinearLayoutManager:
     private var visibleItemCount = 0
     private var totalItemCount = 0
     private var currentPage = 1
+
     override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         super.onScrolled(recyclerView, dx, dy)
         visibleItemCount = recyclerView.childCount

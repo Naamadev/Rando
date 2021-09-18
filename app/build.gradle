@@ -22,6 +22,7 @@ android {
         buildConfigField "String", "TMDB_BASE_URL", "\"https://api.themoviedb.org/3/\""
         buildConfigField "String", "TMDB_PICTURE_BASE_URL", "\"https://image.tmdb.org/t/p/original\""
         buildConfigField "String", "YOUTUBE_API_KEY", "\"AIzaSyBjo1tRnyVdZjqJAYGwxqqBXRFH_jvNzH4\""
+        buildConfigField "String", "TMDB_SHARE_BASE_URL", "\"https://themoviedb.org/movie/\""
 
     }
 

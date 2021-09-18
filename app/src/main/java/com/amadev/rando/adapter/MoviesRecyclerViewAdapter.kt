@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
-import com.amadev.rando.R
 import com.amadev.rando.databinding.CustomMoviesRecyclerviewPatternBinding
 import com.amadev.rando.model.MovieDetailsResults
 import com.amadev.rando.util.Util.getProgressDrawable
@@ -36,18 +35,13 @@ class MoviesRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder) {
             binding.apply {
-                if (list.isEmpty()) {
-                    movieName.text = context.getString(R.string.noMoviesHere)
-                } else {
-                    setUpViews(list[position], holder)
+                setUpViews(list[position], holder)
 
-                    holder.itemView.setOnClickListener {
-                        bundle.putParcelable("movieDetails", list[position])
-                        navigateAndSendData(bundle, holder)
-                    }
+                holder.itemView.setOnClickListener {
+                    bundle.putParcelable("movieDetails", list[position])
+                    navigateAndSendData(bundle, holder)
                 }
             }
-
         }
     }
 
@@ -79,10 +73,3 @@ class MoviesRecyclerViewAdapter(
         return list.size
     }
 }
-
-
-
-
-
-
-
