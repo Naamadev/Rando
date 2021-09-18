@@ -51,6 +51,9 @@ class MainFragmentViewModel(
 
     private val popUpMessageMutableLiveData = MutableLiveData<String>()
 
+    private val _username = MutableLiveData<String>()
+    val username = _username
+
 
     fun getSearchedMovies(query: String) {
         val queryEncoded = encodeUrlString(query)
@@ -159,5 +162,12 @@ class MainFragmentViewModel(
 
     fun isUserLoggedIn() {
         _isUserLoggedInMutableLiveData.value = auth.currentUser != null
+    }
+
+    fun provideUsername() {
+        if (auth.currentUser != null) {
+            val username = auth.currentUser?.email.toString()
+            _username.value = username
+        }
     }
 }

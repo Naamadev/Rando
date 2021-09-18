@@ -177,5 +177,10 @@ If you have any questions or suggestions about my Privacy Policy, do not hesitat
     <string name="finish">FINISH</string>
     <string name="previous">PREVIOUS</string>
     <string name="stopBrowsingTheWeb">Forget about frustrating vetoing of web pages. \nSearch movies in Sine.</string>
+    <string name="my_profile">My Profile</string>
+    <string name="contact">Contact</string>
+    <string name="info">Info</string>
+    <string name="feedback">feedback</string>
+    <string name="send_to">Send to</string>
 
 </resources>

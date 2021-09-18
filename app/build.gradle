@@ -20,7 +20,7 @@ android {
 
         buildConfigField "String", "TMDB_API_KEY", "\"611dca8cf117ec0c95b0da6ed0fbe87a\""
         buildConfigField "String", "TMDB_BASE_URL", "\"https://api.themoviedb.org/3/\""
-        buildConfigField "String", "TMDB_PICTURE_BASE_URL", "\"https://image.tmdb.org/t/p/original/\""
+        buildConfigField "String", "TMDB_PICTURE_BASE_URL", "\"https://image.tmdb.org/t/p/original\""
         buildConfigField "String", "YOUTUBE_API_KEY", "\"AIzaSyBjo1tRnyVdZjqJAYGwxqqBXRFH_jvNzH4\""
 
     }

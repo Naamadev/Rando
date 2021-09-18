@@ -1,12 +1,14 @@
 package com.amadev.rando.ui.fragments.movieDetailsFragment
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.amadev.rando.BuildConfig
 import com.amadev.rando.R
 import com.amadev.rando.YoutubeActivity
 import com.amadev.rando.adapter.CastRecyclerViewAdapter
@@ -30,6 +32,7 @@ class MovieDetailsFragment : Fragment() {
     lateinit var intent: Intent
     var movieId: Int? = null
     private var userLogged: Boolean? = null
+    private var posterEndPoint: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -73,7 +76,24 @@ class MovieDetailsFragment : Fragment() {
             removeFromFavorites.setOnClickListener {
                 removeCurrentMovieFromFavorites(movieId)
             }
+            share.setOnClickListener {
+                shareMovie()
+            }
         }
+    }
+
+    private fun shareMovie() {
+        val imageUri = BuildConfig.TMDB_PICTURE_BASE_URL + posterEndPoint
+
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, imageUri)
+            type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
+
     }
 
     private fun removeCurrentMovieFromFavorites(movieId: Int?) {
@@ -121,6 +141,7 @@ class MovieDetailsFragment : Fragment() {
                         overviewTv.text = overviewText.trim()
                     }
                     it?.poster_path?.let { uri ->
+                        posterEndPoint = uri
                         movieImage.loadImageWithGlide(uri, getProgressDrawable(requireContext()))
                     }
                 }

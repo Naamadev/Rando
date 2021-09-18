@@ -1,6 +1,7 @@
 package com.amadev.rando.ui.fragments.movieDetailsFragment
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -32,7 +33,7 @@ class MovieDetailsViewModel(
 ) : ViewModel() {
 
     companion object {
-        const val FAVORITE_MOVIES = "Favorite movies"
+        const val FAVORITE_MOVIES = "favorite movies"
         val failedAddingToFavorites = Messages.FailedAddingToFavorites
         val addedToFavorites = Messages.AddedToFavorites
         val movieRemovedFromFavorites = Messages.MovieRemovedFromFavorites
@@ -120,8 +121,8 @@ class MovieDetailsViewModel(
 
     fun removeCurrentMovieFromFavoriteMovies(movieId: Int?) {
         val firebaseReference =
-            firebaseDatabase.getReference("Users")
-                .child(replaceFirebaseForbiddenChars(uuid))
+            firebaseDatabase.getReference("users")
+                .child(uuid)
                 .child(FAVORITE_MOVIES)
                 .child(movieId.toString())
 
@@ -137,8 +138,8 @@ class MovieDetailsViewModel(
 
     fun addCurrentMovieToFavoriteMovies() {
         val firebaseReference =
-            firebaseDatabase.getReference("Users")
-                .child(replaceFirebaseForbiddenChars(uuid))
+            firebaseDatabase.getReference("users")
+                .child(uuid)
                 .child(FAVORITE_MOVIES)
 
         firebaseReference
@@ -155,8 +156,8 @@ class MovieDetailsViewModel(
 
     fun getFavoriteMovies() {
         val firebaseReference =
-            firebaseDatabase.getReference("Users")
-                .child(replaceFirebaseForbiddenChars(uuid))
+            firebaseDatabase.getReference("users")
+                .child(uuid)
                 .child(FAVORITE_MOVIES)
 
         val query: Query = firebaseReference

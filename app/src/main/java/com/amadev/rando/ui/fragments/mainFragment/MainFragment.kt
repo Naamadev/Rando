@@ -1,13 +1,17 @@
 package com.amadev.rando.ui.fragments.mainFragment
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -21,6 +25,7 @@ import com.amadev.rando.model.MovieDetailsResults
 import com.amadev.rando.ui.dialogs.logout.LogoutDialog
 import com.amadev.rando.util.Util.isNetworkAvailable
 import com.amadev.rando.util.Util.showToast
+import com.google.android.material.navigation.NavigationView
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainFragment : Fragment() {
@@ -30,6 +35,7 @@ class MainFragment : Fragment() {
     private val action = R.id.action_mainFragment_to_movieDetailsFragment
     private var isUserLoggedIn: Boolean = false
 
+    private lateinit var navView: NavigationView
     private lateinit var linearLayoutManager: LinearLayoutManager
     private lateinit var topRatedAdapter: MoviesRecyclerViewAdapter
     private lateinit var popularAdapter: MoviesRecyclerViewAdapter
@@ -58,15 +64,55 @@ class MainFragment : Fragment() {
             setUpPopularRecyclerviewAdapter()
             setUpNowPlayingRecyclerviewAdapter()
             setUpUpcomingRecyclerviewAdapter()
-            checkIsUserLoggedIn()
             getMovies()
+            checkIsUserLoggedIn()
+            provideUsername()
             setUpObservers()
             setUpOnClickListeners()
             setUpSearchMoviesEditText()
             setUpOnBackPressedCallback()
+            setUpDrawer()
+            setUpBottomNavMenu()
         } else {
             showToast(requireContext(), getString(R.string.noInternetConnection))
         }
+    }
+
+    private fun setUpDrawer() {
+        navView = binding.navView
+        navView.getHeaderView(0)
+
+        navView.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.drawerLogout -> provideLogoutDialog()
+                R.id.drawerContact -> sendEmail("Contact")
+                R.id.drawerFeedback -> sendEmail("Feedback")
+            }
+            true
+        }
+    }
+
+    private fun sendEmail(title: String) {
+        val selectorIntent = Intent(Intent.ACTION_SENDTO)
+        selectorIntent.data = Uri.parse("mailto:")
+
+        val emailIntent = Intent(Intent.ACTION_SEND)
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("simpleapsdeveloper@gmail.com"))
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, title)
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Write your message here")
+        emailIntent.selector = selectorIntent
+
+        activity?.startActivity(Intent.createChooser(emailIntent, "Send email..."))
+    }
+
+
+    private fun setUpNavHeaderUsername(username: String?) {
+        val usernameTv = navView.getHeaderView(0).findViewById<TextView>(R.id.username)
+        usernameTv.text = username
+    }
+
+    private fun provideUsername() {
+        mainFragmentViewModel.provideUsername()
     }
 
     private fun setUpOnBackPressedCallback() {
@@ -102,20 +148,32 @@ class MainFragment : Fragment() {
                     }
                 }
             }
+
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
         })
     }
 
+    private fun setUpBottomNavMenu() {
+        binding.bottomNav.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.bottomNavSearch -> setUpSearchOnViewsVisibility()
+                R.id.bottomNavFavorites -> navigateToFavoritesFragment()
+                R.id.bottomNavMenu -> openDrawer()
+            }
+            true
+        }
+    }
+
+    private fun openDrawer() {
+        binding.drawer.openDrawer(Gravity.LEFT)
+    }
+
     private fun setUpOnClickListeners() {
         binding.apply {
-            search.setOnClickListener {
-                setUpSearchOnViewsVisibility()
-            }
             searchOff.setOnClickListener {
                 clearSearchedText()
                 setUpSearchOffViewsVisibility()
-
             }
             topRatedMore.setOnClickListener {
                 navigateToTopRatedFragment()
@@ -129,17 +187,6 @@ class MainFragment : Fragment() {
             popularMore.setOnClickListener {
                 navigateToPopularFragment()
             }
-            logout.setOnClickListener {
-                provideLogoutDialog()
-            }
-            favoriteMovies.setOnClickListener {
-                if (isUserLoggedIn) {
-                    navigateToFavoritesFragment()
-                } else {
-                    showToast(requireContext(), getString(R.string.youMustBeLoggedIn))
-                }
-            }
-
         }
     }
 
@@ -152,12 +199,16 @@ class MainFragment : Fragment() {
         mainFragmentViewModel.isUserLoggedIn()
     }
 
-    private fun navigateToUpcomingFragment() {
-        findNavController().navigate(R.id.action_mainFragment_to_upcomingFragment)
+    private fun navigateToFavoritesFragment() {
+        if (isUserLoggedIn) {
+            findNavController().navigate(R.id.action_mainFragment_to_favoritesFragment)
+        } else {
+            showToast(requireContext(), getString(R.string.youMustBeLoggedIn))
+        }
     }
 
-    private fun navigateToFavoritesFragment() {
-        findNavController().navigate(R.id.action_mainFragment_to_favoritesFragment)
+    private fun navigateToUpcomingFragment() {
+        findNavController().navigate(R.id.action_mainFragment_to_upcomingFragment)
     }
 
     private fun navigateToPopularFragment() {
@@ -190,8 +241,6 @@ class MainFragment : Fragment() {
             setUpViewVisibilityGone(nowPlaying)
             setUpViewVisibilityGone(nowPlayingMore)
             setUpViewVisibilityGone(nowPlayingRecyclerView)
-            setUpViewVisibilityGone(search)
-            setUpViewVisibilityGone(favoriteMovies)
             setUpViewVisibilityVisible(searchMoviesEditText)
             setUpViewVisibilityVisible(searchedMoviesRecyclerView)
             setUpViewVisibilityVisible(searchedMoviesResults)
@@ -213,8 +262,6 @@ class MainFragment : Fragment() {
             setUpViewVisibilityVisible(nowPlaying)
             setUpViewVisibilityVisible(nowPlayingMore)
             setUpViewVisibilityVisible(nowPlayingRecyclerView)
-            setUpViewVisibilityVisible(search)
-            setUpViewVisibilityVisible(favoriteMovies)
             setUpViewVisibilityGone(searchedMoviesRecyclerView)
             setUpViewVisibilityGone(searchedMoviesResults)
             setUpViewVisibilityGone(searchOff)
@@ -251,6 +298,9 @@ class MainFragment : Fragment() {
                 isUserLoggedIn.observe(viewLifecycleOwner) {
                     if (it) setUpViewVisibilityVisible(binding.logout)
                     this@MainFragment.isUserLoggedIn = it
+                }
+                username.observe(viewLifecycleOwner) {
+                    setUpNavHeaderUsername(it)
                 }
             }
         }
@@ -347,18 +397,10 @@ class MainFragment : Fragment() {
         list: ArrayList<MovieDetailsResults>,
         adapter: UpcomingMoviesRecyclerViewAdapter
     ) {
-//        val adapter =
-//            UpcomingMoviesRecyclerViewAdapter(requireView(), requireContext(), arrayListOf())
         adapter.notifyDataSetChanged()
         adapter.list.apply {
             clear()
             addAll(list)
-//            binding.apply {
-//                upcomingRecyclerView.layoutManager = upcomingRecyclerView.getCarouselLayoutManager()
-//                upcomingRecyclerView.adapter = adapter
-//                upcomingRecyclerView.setInfinite(true)
-//                upcomingRecyclerView.setAlpha(true)
-//            }
         }
     }
 }

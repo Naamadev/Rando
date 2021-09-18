@@ -20,7 +20,7 @@ class FavoritesFragmentViewModel(
 ) : ViewModel() {
 
     companion object {
-        const val FAVORITE_MOVIES = "Favorite movies"
+        const val FAVORITE_MOVIES = "favorite movies"
         val failedToLoadFavoriteMovies = Messages.FailedToLoadFavoriteMovies
         val thereIsNoMoviesHere = Messages.ThereIsNoMoviesHere
     }
@@ -41,7 +41,7 @@ class FavoritesFragmentViewModel(
         val favoriteMoviesList = ArrayList<MovieDetailsResults>()
 
         val firebaseReference =
-            firebaseDatabase.getReference("Users")
+            firebaseDatabase.getReference("users")
                 .child(uuid)
                 .child(FAVORITE_MOVIES)
 
