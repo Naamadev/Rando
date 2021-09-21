@@ -12,6 +12,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
         <ScrollView
             android:id="@+id/scrollView2"
             android:layout_width="match_parent"
@@ -194,9 +206,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:orientation="vertical"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/nowPlayingRecyclerView"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/nowPlayingRecyclerView" />
 
                 <TextView
                     android:id="@+id/searchedMoviesResults"
@@ -268,8 +280,8 @@
             android:layout_height="wrap_content"
             android:background="@color/transparent_black"
             app:itemIconTint="@color/white"
-            app:itemTextColor="@color/white"
             app:itemRippleColor="@color/yellow_rating"
+            app:itemTextColor="@color/white"
             app:layout_constraintBottom_toBottomOf="@+id/constraintHolder"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

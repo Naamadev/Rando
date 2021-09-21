@@ -183,4 +183,9 @@ If you have any questions or suggestions about my Privacy Policy, do not hesitat
     <string name="feedback">feedback</string>
     <string name="send_to">Send to</string>
 
+    <string name="developerEmail" type="id">simpleapsdeveloper@gmail.com</string>
+    <string name="writeYourMessageHere">Write your message here</string>
+    <string name="emailTo">Email to..</string>
+    <string name="sineContact">Sine contact</string>
+    <string name="sineFeedback">Sine feedback</string>
 </resources>

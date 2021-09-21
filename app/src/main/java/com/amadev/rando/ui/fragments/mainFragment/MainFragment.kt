@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amadev.rando.R
+import com.amadev.rando.adapter.MoviesGridRecyclerViewAdapter
 import com.amadev.rando.adapter.MoviesRecyclerViewAdapter
 import com.amadev.rando.adapter.UpcomingMoviesRecyclerViewAdapter
 import com.amadev.rando.databinding.FragmentMainBinding
@@ -37,14 +38,17 @@ class MainFragment : Fragment() {
 
     private lateinit var navView: NavigationView
     private lateinit var linearLayoutManager: LinearLayoutManager
+    private lateinit var gridLayoutManager: GridLayoutManager
     private lateinit var topRatedAdapter: MoviesRecyclerViewAdapter
     private lateinit var popularAdapter: MoviesRecyclerViewAdapter
     private lateinit var nowPlayingAdapter: MoviesRecyclerViewAdapter
     private lateinit var upcomingAdapter: UpcomingMoviesRecyclerViewAdapter
+    private lateinit var searchAdapter: MoviesGridRecyclerViewAdapter
 
     companion object {
         const val DELAY_TIME = 1500L
         val currentPage = (0..10).random()
+        var searchViewsOpen = false
     }
 
     override fun onCreateView(
@@ -60,14 +64,13 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (isNetworkAvailable(requireContext())) {
-            setUpTopRatedRecyclerviewAdapter()
-            setUpPopularRecyclerviewAdapter()
-            setUpNowPlayingRecyclerviewAdapter()
-            setUpUpcomingRecyclerviewAdapter()
+            setUpProgressBarVisibility(true)
+            setUpSearchViewsVisibility()
+            setUpRecyclerViewAdapters()
+            setUpObservers()
             getMovies()
             checkIsUserLoggedIn()
             provideUsername()
-            setUpObservers()
             setUpOnClickListeners()
             setUpSearchMoviesEditText()
             setUpOnBackPressedCallback()
@@ -78,40 +81,35 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun setUpDrawer() {
-        navView = binding.navView
-        navView.getHeaderView(0)
+    private fun setUpSearchViewsVisibility() {
+        if (searchViewsOpen) setUpSearchOnViewsVisibility() else setUpSearchOffViewsVisibility()
+    }
 
-        navView.setNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.drawerLogout -> provideLogoutDialog()
-                R.id.drawerContact -> sendEmail("Contact")
-                R.id.drawerFeedback -> sendEmail("Feedback")
-            }
-            true
+    private fun setUpProgressBarVisibility(visible: Boolean) {
+        binding.progressBar.apply {
+            visibility = if (visible) View.VISIBLE else View.GONE
         }
+    }
+
+    private fun setUpRecyclerViewAdapters() {
+        setUpTopRatedRecyclerviewAdapter()
+        setUpPopularRecyclerviewAdapter()
+        setUpNowPlayingRecyclerviewAdapter()
+        setUpUpcomingRecyclerviewAdapter()
+        setUpSearchedMoviesRecyclerViewAdapter()
     }
 
     private fun sendEmail(title: String) {
         val selectorIntent = Intent(Intent.ACTION_SENDTO)
-        selectorIntent.data = Uri.parse("mailto:")
+        selectorIntent.data = Uri.parse(getString(R.string.emailTo))
 
         val emailIntent = Intent(Intent.ACTION_SEND)
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("simpleapsdeveloper@gmail.com"))
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.developerEmail)))
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, title)
-        emailIntent.putExtra(Intent.EXTRA_TEXT, "Write your message here")
+        emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.writeYourMessageHere))
         emailIntent.selector = selectorIntent
 
-        activity?.startActivity(Intent.createChooser(emailIntent, "Send email..."))
-    }
-
-    private fun setUpNavHeaderUsername(username: String?) {
-        val usernameTv = navView.getHeaderView(0).findViewById<TextView>(R.id.username)
-        usernameTv.text = username
-    }
-
-    private fun provideUsername() {
-        mainFragmentViewModel.provideUsername()
+        activity?.startActivity(Intent.createChooser(emailIntent, getString(R.string.emailTo)))
     }
 
     private fun setUpOnBackPressedCallback() {
@@ -127,10 +125,6 @@ class MainFragment : Fragment() {
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-    }
-
-    private fun navigateToSignInOrSignUpFragment() {
-        findNavController().navigate(R.id.action_mainFragment_to_signinOrSignUpFragment)
     }
 
     private fun searchMovies(query: String) {
@@ -154,10 +148,26 @@ class MainFragment : Fragment() {
         })
     }
 
+    private fun setUpDrawer() {
+        navView = binding.navView
+        navView.getHeaderView(0)
+        navView.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.drawerLogout -> provideLogoutDialog()
+                R.id.drawerContact -> sendEmail(getString(R.string.sineContact))
+                R.id.drawerFeedback -> sendEmail(getString(R.string.sineFeedback))
+            }
+            true
+        }
+    }
+
     private fun setUpBottomNavMenu() {
         binding.bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
-                R.id.bottomNavSearch -> setUpSearchOnViewsVisibility()
+                R.id.bottomNavSearch -> {
+                    searchViewsOpen = true
+                    setUpSearchOnViewsVisibility()
+                }
                 R.id.bottomNavFavorites -> navigateToFavoritesFragment()
                 R.id.bottomNavMenu -> openDrawer()
             }
@@ -172,6 +182,7 @@ class MainFragment : Fragment() {
     private fun setUpOnClickListeners() {
         binding.apply {
             searchOff.setOnClickListener {
+                searchViewsOpen = false
                 clearSearchedText()
                 setUpSearchOffViewsVisibility()
             }
@@ -195,6 +206,15 @@ class MainFragment : Fragment() {
         dialog.show(childFragmentManager, null)
     }
 
+    private fun setUpNavHeaderUsername(username: String?) {
+        val usernameTv = navView.getHeaderView(0).findViewById<TextView>(R.id.username)
+        usernameTv.text = username
+    }
+
+    private fun provideUsername() {
+        mainFragmentViewModel.provideUsername()
+    }
+
     private fun checkIsUserLoggedIn() {
         mainFragmentViewModel.isUserLoggedIn()
     }
@@ -205,6 +225,10 @@ class MainFragment : Fragment() {
         } else {
             showToast(requireContext(), getString(R.string.youMustBeLoggedIn))
         }
+    }
+
+    private fun navigateToSignInOrSignUpFragment() {
+        findNavController().navigate(R.id.action_mainFragment_to_signinOrSignUpFragment)
     }
 
     private fun navigateToUpcomingFragment() {
@@ -227,48 +251,6 @@ class MainFragment : Fragment() {
         binding.searchMoviesEditText.text.clear()
     }
 
-    private fun setUpSearchOnViewsVisibility() {
-        binding.apply {
-            setUpViewVisibilityGone(upcoming)
-            setUpViewVisibilityGone(upcomingMore)
-            setUpViewVisibilityGone(upcomingRecyclerView)
-            setUpViewVisibilityGone(topRated)
-            setUpViewVisibilityGone(topRatedMore)
-            setUpViewVisibilityGone(topRatedRecyclerView)
-            setUpViewVisibilityGone(popular)
-            setUpViewVisibilityGone(popularMore)
-            setUpViewVisibilityGone(popularRecyclerView)
-            setUpViewVisibilityGone(nowPlaying)
-            setUpViewVisibilityGone(nowPlayingMore)
-            setUpViewVisibilityGone(nowPlayingRecyclerView)
-            setUpViewVisibilityVisible(searchMoviesEditText)
-            setUpViewVisibilityVisible(searchedMoviesRecyclerView)
-            setUpViewVisibilityVisible(searchedMoviesResults)
-            setUpViewVisibilityVisible(searchOff)
-        }
-    }
-
-    private fun setUpSearchOffViewsVisibility() {
-        binding.apply {
-            setUpViewVisibilityVisible(upcoming)
-            setUpViewVisibilityVisible(upcomingMore)
-            setUpViewVisibilityVisible(upcomingRecyclerView)
-            setUpViewVisibilityVisible(topRated)
-            setUpViewVisibilityVisible(topRatedMore)
-            setUpViewVisibilityVisible(topRatedRecyclerView)
-            setUpViewVisibilityVisible(popular)
-            setUpViewVisibilityVisible(popularMore)
-            setUpViewVisibilityVisible(popularRecyclerView)
-            setUpViewVisibilityVisible(nowPlaying)
-            setUpViewVisibilityVisible(nowPlayingMore)
-            setUpViewVisibilityVisible(nowPlayingRecyclerView)
-            setUpViewVisibilityGone(searchedMoviesRecyclerView)
-            setUpViewVisibilityGone(searchedMoviesResults)
-            setUpViewVisibilityGone(searchOff)
-            setUpViewVisibilityGone(searchMoviesEditText)
-        }
-    }
-
     private fun setUpViewVisibilityGone(view: View) {
         view.visibility = View.GONE
     }
@@ -281,19 +263,20 @@ class MainFragment : Fragment() {
         mainFragmentViewModel.apply {
             binding.apply {
                 topRatedMoviesResultsLiveData.observe(viewLifecycleOwner) {
-                    setUpMoviesHorizontalRecyclerViewAdapter(it, topRatedAdapter)
+                    setUpProgressBarVisibility(false)
+                    setUpMoviesHorizontalRecyclerView(it, topRatedAdapter)
                 }
                 popularMoviesResultsLiveData.observe(viewLifecycleOwner) {
-                    setUpMoviesHorizontalRecyclerViewAdapter(it, popularAdapter)
+                    setUpMoviesHorizontalRecyclerView(it, popularAdapter)
+                }
+                nowPlayingMoviesLiveData.observe(viewLifecycleOwner) {
+                    setUpMoviesHorizontalRecyclerView(it, nowPlayingAdapter)
                 }
                 upcomingMoviesResultsLiveData.observe(viewLifecycleOwner) {
                     setUpUpcomingMoviesHorizontalRecyclerViewAdapter(it, upcomingAdapter)
                 }
-                nowPlayingMoviesLiveData.observe(viewLifecycleOwner) {
-                    setUpMoviesHorizontalRecyclerViewAdapter(it, nowPlayingAdapter)
-                }
                 searchedMoviesLiveData.observe(viewLifecycleOwner) {
-                    setUpSearchedMoviesRecyclerViewAdapter(it)
+                    setUpGridRecyclerView(it, searchAdapter)
                 }
                 isUserLoggedIn.observe(viewLifecycleOwner) {
                     this@MainFragment.isUserLoggedIn = it
@@ -305,29 +288,28 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun setUpSearchedMoviesRecyclerViewAdapter(list: ArrayList<MovieDetailsResults>) {
-        val adapter = MoviesRecyclerViewAdapter(requireView(), requireContext(), arrayListOf(), action)
-        adapter.list.apply {
-            clear()
-            addAll(list)
-            binding.apply {
-                searchedMoviesRecyclerView.layoutManager =
-                    GridLayoutManager(requireContext(), 3)
-                searchedMoviesRecyclerView.adapter = adapter
+    private fun getMovies() {
+        mainFragmentViewModel.apply {
+//            Handler(Looper.myLooper()!!).postDelayed({
+                getTopRatedMovies(currentPage)
+                getPopularMovies(currentPage)
+                getUpcomingMovies(currentPage)
+                getNowPlayingMovies(currentPage)
+//            }, DELAY_TIME)
+        }
+    }
+
+    private fun setUpSearchedMoviesRecyclerViewAdapter() {
+        gridLayoutManager = GridLayoutManager(requireContext(), 3)
+        searchAdapter =
+            MoviesGridRecyclerViewAdapter(requireView(), requireContext(), arrayListOf(), action)
+        searchAdapter.apply {
+            binding.searchedMoviesRecyclerView.apply {
+                layoutManager = gridLayoutManager
+                adapter = searchAdapter
             }
         }
     }
-
-
-    private fun getMovies() {
-        mainFragmentViewModel.apply {
-            getTopRatedMovies(currentPage)
-            getPopularMovies(currentPage)
-            getUpcomingMovies(currentPage)
-            getNowPlayingMovies(currentPage)
-        }
-    }
-
 
     private fun setUpTopRatedRecyclerviewAdapter() {
         linearLayoutManager =
@@ -368,7 +350,19 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun setUpMoviesHorizontalRecyclerViewAdapter(
+    private fun setUpGridRecyclerView(
+        list: ArrayList<MovieDetailsResults>,
+        adapter: MoviesGridRecyclerViewAdapter
+    ) {
+        adapter.notifyDataSetChanged()
+        adapter.list.apply {
+            clear()
+            addAll(list)
+        }
+
+    }
+
+    private fun setUpMoviesHorizontalRecyclerView(
         list: ArrayList<MovieDetailsResults>,
         adapter: MoviesRecyclerViewAdapter
     ) {
@@ -400,6 +394,49 @@ class MainFragment : Fragment() {
         adapter.list.apply {
             clear()
             addAll(list)
+        }
+    }
+
+    private fun setUpSearchOnViewsVisibility() {
+        searchViewsOpen = true
+        binding.apply {
+            setUpViewVisibilityGone(upcoming)
+            setUpViewVisibilityGone(upcomingMore)
+            setUpViewVisibilityGone(upcomingRecyclerView)
+            setUpViewVisibilityGone(topRated)
+            setUpViewVisibilityGone(topRatedMore)
+            setUpViewVisibilityGone(topRatedRecyclerView)
+            setUpViewVisibilityGone(popular)
+            setUpViewVisibilityGone(popularMore)
+            setUpViewVisibilityGone(popularRecyclerView)
+            setUpViewVisibilityGone(nowPlaying)
+            setUpViewVisibilityGone(nowPlayingMore)
+            setUpViewVisibilityGone(nowPlayingRecyclerView)
+            setUpViewVisibilityVisible(searchMoviesEditText)
+            setUpViewVisibilityVisible(searchedMoviesRecyclerView)
+            setUpViewVisibilityVisible(searchedMoviesResults)
+            setUpViewVisibilityVisible(searchOff)
+        }
+    }
+
+    private fun setUpSearchOffViewsVisibility() {
+        binding.apply {
+            setUpViewVisibilityVisible(upcoming)
+            setUpViewVisibilityVisible(upcomingMore)
+            setUpViewVisibilityVisible(upcomingRecyclerView)
+            setUpViewVisibilityVisible(topRated)
+            setUpViewVisibilityVisible(topRatedMore)
+            setUpViewVisibilityVisible(topRatedRecyclerView)
+            setUpViewVisibilityVisible(popular)
+            setUpViewVisibilityVisible(popularMore)
+            setUpViewVisibilityVisible(popularRecyclerView)
+            setUpViewVisibilityVisible(nowPlaying)
+            setUpViewVisibilityVisible(nowPlayingMore)
+            setUpViewVisibilityVisible(nowPlayingRecyclerView)
+            setUpViewVisibilityGone(searchedMoviesRecyclerView)
+            setUpViewVisibilityGone(searchedMoviesResults)
+            setUpViewVisibilityGone(searchOff)
+            setUpViewVisibilityGone(searchMoviesEditText)
         }
     }
 }
