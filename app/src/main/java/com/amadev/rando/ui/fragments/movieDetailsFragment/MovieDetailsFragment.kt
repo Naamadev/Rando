@@ -1,7 +1,6 @@
 package com.amadev.rando.ui.fragments.movieDetailsFragment
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,7 +31,7 @@ class MovieDetailsFragment : Fragment() {
     lateinit var intent: Intent
     private var movieId: Int? = null
     private var userLogged: Boolean? = null
-//    private var movieid: Int? = null
+    private var youtubeEndpoint: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,6 +46,7 @@ class MovieDetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if (Util.isNetworkAvailable(requireContext())) {
+            watchTrailerButtonVisble(false)
             checkIsUserLoggedIn()
             setUpObservers()
             setUpViewModel()
@@ -55,6 +55,12 @@ class MovieDetailsFragment : Fragment() {
             showToast(requireContext(), getString(R.string.noInternetConnection))
         }
 
+    }
+
+    private fun watchTrailerButtonVisble(visible: Boolean) {
+        binding.watchTrailer.apply {
+            visibility = if (visible) View.VISIBLE else View.GONE
+        }
     }
 
     private fun checkIsUserLoggedIn() {
@@ -82,9 +88,12 @@ class MovieDetailsFragment : Fragment() {
         }
     }
 
+    private fun removeCurrentMovieFromFavorites(movieId: Int?) {
+        movieDetailsViewModel.removeCurrentMovieFromFavoriteMovies(movieId)
+    }
+
     private fun shareMovie() {
         val imageUri = BuildConfig.TMDB_SHARE_BASE_URL + movieId
-
         val sendIntent: Intent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, imageUri)
@@ -93,15 +102,14 @@ class MovieDetailsFragment : Fragment() {
 
         val shareIntent = Intent.createChooser(sendIntent, null)
         startActivity(shareIntent)
-
-    }
-
-    private fun removeCurrentMovieFromFavorites(movieId: Int?) {
-        movieDetailsViewModel.removeCurrentMovieFromFavoriteMovies(movieId)
     }
 
     private fun startYoutubeActivity() {
-        startActivity(intent)
+        if (youtubeEndpoint != null) {
+            intent = Intent(requireContext(), YoutubeActivity::class.java)
+            intent.putExtra("videoEndpoint", youtubeEndpoint)
+            startActivity(intent)
+        }
     }
 
     private fun setUpObservers() {
@@ -117,7 +125,10 @@ class MovieDetailsFragment : Fragment() {
                     setUpCastRecyclerView(it as ArrayList<CastModelResults>)
                 }
                 videoEndPoint.observe(viewLifecycleOwner) {
-                    setUpYoutubeIntent(it)
+                    if (it.isNullOrEmpty().not()) {
+                        youtubeEndpoint = it
+                        watchTrailerButtonVisble(true)
+                    }
                 }
                 popUpMessageMutableLiveData.observe(viewLifecycleOwner) {
                     showSnackBar(requireView(), it)
@@ -174,14 +185,6 @@ class MovieDetailsFragment : Fragment() {
                 addToFavorites.visibility = View.VISIBLE
             }
         }
-    }
-
-    private fun setUpYoutubeIntent(videoEndPoint: String): Intent {
-        if (videoEndPoint.isEmpty().not()) {
-            intent = Intent(requireContext(), YoutubeActivity::class.java)
-            intent.putExtra("videoId", videoEndPoint)
-        }
-        return intent
     }
 
     private fun setUpCastRecyclerView(list: ArrayList<CastModelResults>) {

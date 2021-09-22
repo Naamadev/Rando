@@ -10,6 +10,7 @@ import com.amadev.rando.data.ApiService
 import com.amadev.rando.model.MovieDetailsResults
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.net.URLEncoder
 
@@ -59,13 +60,13 @@ class MainFragmentViewModel(
         val queryEncoded = encodeUrlString(query)
 
         viewModelScope.launch(Dispatchers.IO) {
+            delay(500)
             val response = ApiService(apiClient).searchForMovies(queryEncoded)
             if (response.isSuccessful) {
                 response.body()?.let {
                     val results = it.results as ArrayList<MovieDetailsResults>
                     searchedMoviesMutableLiveData.postValue(results)
                 }
-
             } else if (response.isSuccessful.not()) {
                 popUpMessageMutableLiveData.postValue(getMessage(somethingWentWrong))
             }
@@ -76,27 +77,11 @@ class MainFragmentViewModel(
         return URLEncoder.encode(string, "utf-8")
     }
 
-    fun getNowPlayingMovies(page : Int) {
-        val resultsList = ArrayList<MovieDetailsResults>()
-
-        viewModelScope.launch(Dispatchers.IO) {
-            val response = ApiService(apiClient).getNowPlayingMovies(page)
-            if (response.isSuccessful) {
-                response.body()?.let {
-                    it.results.forEach { results ->
-                        if (results.poster_path.isNullOrEmpty().not())
-                            resultsList.add(results)
-                    }
-                    nowPlayingMoviesMutableLiveData.postValue(resultsList)
-                }
-            }
-        }
-    }
-
     fun getUpcomingMovies(page: Int) {
         val resultsList = ArrayList<MovieDetailsResults>()
 
         viewModelScope.launch(Dispatchers.IO) {
+            delay(1000)
             val response = ApiService(apiClient).getUpcomingMovie(page)
             if (response.isSuccessful) {
                 response.body()?.let {
@@ -117,6 +102,7 @@ class MainFragmentViewModel(
         val resultsList = ArrayList<MovieDetailsResults>()
 
         viewModelScope.launch(Dispatchers.IO) {
+            delay(1500)
             val response = ApiService(apiClient).getTopRatedMovie(page)
             if (response.isSuccessful) {
                 val responseBody = response.body()
@@ -138,6 +124,7 @@ class MainFragmentViewModel(
         val resultsList = ArrayList<MovieDetailsResults>()
 
         viewModelScope.launch(Dispatchers.IO) {
+            delay(2000)
             val response = ApiService(apiClient).getPopularMovie(page)
             if (response.isSuccessful) {
                 val responseBody = response.body()
@@ -154,6 +141,26 @@ class MainFragmentViewModel(
             }
         }
     }
+
+    fun getNowPlayingMovies(page : Int) {
+        val resultsList = ArrayList<MovieDetailsResults>()
+        viewModelScope.launch(Dispatchers.IO) {
+            delay(2500)
+            val response = ApiService(apiClient).getNowPlayingMovies(page)
+            if (response.isSuccessful) {
+                response.body()?.let {
+                    it.results.forEach { results ->
+                        if (results.poster_path.isNullOrEmpty().not())
+                            resultsList.add(results)
+                    }
+                    nowPlayingMoviesMutableLiveData.postValue(resultsList)
+                }
+            } else {
+                popUpMessageMutableLiveData.postValue(getMessage(somethingWentWrong))
+            }
+        }
+    }
+
 
     private fun getMessage(messages: Messages) =
         when (messages) {

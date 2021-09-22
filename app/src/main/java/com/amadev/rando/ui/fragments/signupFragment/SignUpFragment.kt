@@ -34,7 +34,7 @@ class SignUpFragment : Fragment() {
             setUpProgressBarVisibility()
             setUpObservers()
             setUpOnClickListeners()
-            setUponBackPressedCallback()
+            setUpOnBackPressedCallback()
         } else {
             showToast(requireContext(), getString(R.string.noInternetConnection))
         }
@@ -115,7 +115,7 @@ class SignUpFragment : Fragment() {
         }
     }
 
-    private fun setUponBackPressedCallback() {
+    private fun setUpOnBackPressedCallback() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 findNavController().navigate(R.id.action_signUpFragment_to_signinOrSignUpFragment)

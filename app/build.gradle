@@ -65,7 +65,7 @@ dependencies {
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
     implementation 'com.google.firebase:firebase-auth:21.0.1'
     implementation platform('com.google.firebase:firebase-bom:28.2.1')
-    implementation 'com.google.firebase:firebase-database:20.0.1'
+    implementation 'com.google.firebase:firebase-database:20.0.2'
     implementation 'com.google.firebase:firebase-common-ktx:20.0.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
 

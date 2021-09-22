@@ -15,7 +15,7 @@ class YoutubeActivity : YouTubeBaseActivity() {
         setContentView(R.layout.activity_youtube)
 
         val intent = intent
-        val videoID = intent.getStringExtra("videoId")
+        val videoID = intent.getStringExtra("videoEndpoint")
         val ytPlayer = findViewById<YouTubePlayerView>(R.id.youtube_player)
 
         initializeYouTubePlayer(ytPlayer, videoID)

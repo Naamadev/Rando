@@ -28,7 +28,6 @@ class SignUpViewModel(private val context: Context, private val auth: FirebaseAu
         val verifyEmailSent = Messages.VerifyEmailSent
         val signInFailed = Messages.SignInFailed
         val passwordNotSame = Messages.PasswordsNotSame
-        val userCreated = Messages.UserCreated
         val emailAlreadyExists = Messages.EmailAlreadyExist
         val passwordToWeak = Messages.PasswordToWeak
     }

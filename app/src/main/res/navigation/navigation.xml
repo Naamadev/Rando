@@ -13,8 +13,6 @@
         <action
             android:id="@+id/action_welcomeScreen_to_viewPagerFragment"
             app:destination="@id/viewPagerFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out"
             app:popUpTo="@id/welcomeScreen"
             app:popUpToInclusive="true" />
         <action
@@ -96,9 +94,6 @@
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" >
         <action
-            android:id="@+id/action_mainFragment_to_youtubeActivity"
-            app:destination="@id/youtubeActivity" />
-        <action
             android:id="@+id/action_mainFragment_to_movieDetailsFragment"
             app:destination="@id/movieDetailsFragment" />
         <argument android:name="results" />
@@ -131,10 +126,16 @@
         android:id="@+id/movieDetailsFragment"
         android:name="com.amadev.rando.ui.fragments.movieDetailsFragment.MovieDetailsFragment"
         android:label="movie_details_fragment"
-        tools:layout="@layout/movie_details_fragment" >
+        tools:layout="@layout/movie_details_fragment">
         <action
             android:id="@+id/action_movieDetailsFragment_to_mainFragment"
             app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_movieDetailsFragment_to_youtubeActivity"
+            app:destination="@id/youtubeActivity" />
+        <action
+            android:id="@+id/action_movieDetailsFragment_to_popularFragment"
+            app:destination="@id/popularFragment" />
     </fragment>
     <fragment
         android:id="@+id/nowPlayingFragment"

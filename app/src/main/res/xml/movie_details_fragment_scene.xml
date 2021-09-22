@@ -16,7 +16,12 @@
         <Constraint android:id="@+id/addToFavorites">
             <PropertySet motion:visibilityMode="ignore" />
         </Constraint>
+
         <Constraint android:id="@+id/removeFromFavorites">
+            <PropertySet motion:visibilityMode="ignore" />
+        </Constraint>
+
+        <Constraint android:id="@+id/watchTrailer">
             <PropertySet motion:visibilityMode="ignore" />
         </Constraint>
     </ConstraintSet>
@@ -50,8 +55,8 @@
             android:layout_marginEnd="24dp"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintTop_toBottomOf="@+id/movieName">
-            <PropertySet motion:visibilityMode="ignore" />
 
+            <PropertySet motion:visibilityMode="ignore" />
         </Constraint>
 
         <Constraint android:id="@+id/removeFromFavorites"
@@ -135,5 +140,10 @@
             motion:layout_constraintTop_toBottomOf="@+id/movieName"
             android:id="@+id/share"
             android:layout_marginTop="8dp" />
+
+        <Constraint android:id="@+id/watchTrailer">
+            <PropertySet motion:visibilityMode="ignore" />
+        </Constraint>
+        
     </ConstraintSet>
 </MotionScene>

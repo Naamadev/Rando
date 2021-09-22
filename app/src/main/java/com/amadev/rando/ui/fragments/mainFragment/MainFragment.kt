@@ -101,21 +101,22 @@ class MainFragment : Fragment() {
 
     private fun sendEmail(title: String) {
         val selectorIntent = Intent(Intent.ACTION_SENDTO)
-        selectorIntent.data = Uri.parse(getString(R.string.emailTo))
+        selectorIntent.data = Uri.parse("mailto:")
 
         val emailIntent = Intent(Intent.ACTION_SEND)
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.developerEmail)))
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("simpleapsdeveloper@gmail.com"))
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, title)
-        emailIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.writeYourMessageHere))
+        emailIntent.putExtra(Intent.EXTRA_TEXT, "Write your message here")
         emailIntent.selector = selectorIntent
 
-        activity?.startActivity(Intent.createChooser(emailIntent, getString(R.string.emailTo)))
+        activity?.startActivity(Intent.createChooser(emailIntent, "Email to..."))
     }
 
     private fun setUpOnBackPressedCallback() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (binding.searchMoviesEditText.visibility == View.VISIBLE) {
+                    searchViewsOpen = false
                     setUpSearchOffViewsVisibility()
                 } else if (!isUserLoggedIn) {
                     navigateToSignInOrSignUpFragment()
@@ -290,12 +291,12 @@ class MainFragment : Fragment() {
 
     private fun getMovies() {
         mainFragmentViewModel.apply {
-//            Handler(Looper.myLooper()!!).postDelayed({
+            Handler(Looper.myLooper()!!).postDelayed({
                 getTopRatedMovies(currentPage)
                 getPopularMovies(currentPage)
                 getUpcomingMovies(currentPage)
                 getNowPlayingMovies(currentPage)
-//            }, DELAY_TIME)
+            }, DELAY_TIME)
         }
     }
 
